@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodPractices_Challenge
+
+namespace GoodPractices_Model
 {
-    class Student : Person
+    public class Student : Person
     {
         public Dictionary<Subject, List<Grade>> PartialGrades { get; }
         public Dictionary<Subject, List<Grade>> FinalGrades { get; }

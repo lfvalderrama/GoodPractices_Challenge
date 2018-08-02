@@ -1,8 +1,8 @@
 ﻿using System.Data.Entity;
 
-namespace GoodPractices_Challenge
+namespace GoodPractices_Model
 {
-    class SchoolDBContext : DbContext
+    public class SchoolDBContext : DbContext
     {
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }

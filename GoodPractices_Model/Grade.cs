@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodPractices_Challenge
+namespace GoodPractices_Model
 {
-    class Grade
+    public class Grade
     {
         public int Id { set; get; }
         public String Period { set; get; }

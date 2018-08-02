@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodPractices_Challenge
+namespace GoodPractices_Model
 {
-    class Subject
+    public class Subject
     {
         public Subject(string name, string content)
         {

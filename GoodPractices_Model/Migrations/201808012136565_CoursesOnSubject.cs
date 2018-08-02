@@ -1,4 +1,4 @@
-namespace GoodPractices_Challenge.Migrations
+namespace GoodPractices_Model.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

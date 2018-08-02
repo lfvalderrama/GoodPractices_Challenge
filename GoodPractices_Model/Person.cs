@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodPractices_Challenge
+namespace GoodPractices_Model
 {
-    class Person
+    public class Person
     {
         public string Document { get; set; }
         public string Name { get; set; }

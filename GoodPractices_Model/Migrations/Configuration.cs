@@ -1,18 +1,18 @@
-namespace GoodPractices_Challenge.Migrations
+namespace GoodPractices_Model.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<GoodPractices_Challenge.SchoolDBContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<GoodPractices_Model.SchoolDBContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(GoodPractices_Challenge.SchoolDBContext context)
+        protected override void Seed(GoodPractices_Model.SchoolDBContext context)
         {
             //  This method will be called after migrating to the latest version.
 
