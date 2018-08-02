@@ -13,6 +13,10 @@ namespace GoodPractices_Model
         public List<Subject> Subjects { get; set; }
         public Student Headman { get; set; }
 
+        public Course()
+        {
+        }
+
         public Course(List<Student> students, List<Subject> subjects, Student headman)
         {
             this.Students = students;

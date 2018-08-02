@@ -11,6 +11,9 @@ namespace GoodPractices_Model
 
         public Language Language { get; set; }
 
+        public ForeignLanguage()
+        {
+        }
 
         public ForeignLanguage(Language language, string name, string content):base(name,content)
         {

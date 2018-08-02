@@ -11,6 +11,10 @@ namespace GoodPractices_Model
         public Course Course { get; set; }
         public List<Subject> Subjects { get; set; }
 
+        public Teacher()
+        {
+        }
+
         public Teacher(Course course, List<Subject> subjects, String name, string cc, int age)
         {
             this.Course = course;

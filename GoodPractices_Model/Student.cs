@@ -14,7 +14,7 @@ namespace GoodPractices_Model
         public ForeignLanguage ForeignLanguaje { set; get; }
 
 
-        public Student(ForeignLanguage foreignLanguaje, string document, string name, int age)
+        public Student(string document, string name, int age, ForeignLanguage foreignLanguaje)
         {
             this.Document = document;
             this.Age = age;
@@ -22,6 +22,12 @@ namespace GoodPractices_Model
             this.PartialGrades = new Dictionary<Subject, List<Grade>>();
             this.FinalGrades = new Dictionary<Subject, List<Grade>>();
             this.ForeignLanguaje = foreignLanguaje;
+        }
+
+        public Student()
+        {
+            this.PartialGrades = new Dictionary<Subject, List<Grade>>();
+            this.FinalGrades = new Dictionary<Subject, List<Grade>>();
         }
     }
 }

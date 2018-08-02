@@ -12,6 +12,10 @@ namespace GoodPractices_Model
         public String Period { set; get; }
         public float Score { set; get; }
 
+        public Grade()
+        {
+        }
+
         public Grade(string period, float score)
         {
             this.Period = period;
