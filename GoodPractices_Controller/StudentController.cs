@@ -8,35 +8,42 @@ namespace GoodPractices_Controller
 {
     class StudentController
     {
-        public void CreateStudent(string document, string name, int age, ForeignLanguage language)
+        public String CreateStudent(string document, string name, int age, ForeignLanguage language)
         {
-            var context = new SchoolDBContext();
-            int numStudentsDocument = (from Student in context.Students where Student.Document == document select Student).Count();
-            
-            if (context.Students.Where(x => x.Document == document).Any())
+            var context = new SchoolDBContext();            
+            if (!context.Students.Where(x => x.Document == document).Any())
             {
                 Student student = new Student(document, name, age, language);
                 context.Students.Add(student);
                 context.SaveChanges();
+                return $"The Student {name} was created satisfactorily";
             }
             else
             {
-                Console.WriteLine($"The student identified with {document} already exists.");
+                return ($"The student identified with {document} already exists.");
             }
         }
 
-        public void DeleteStudent(String document)
+        public String DeleteStudent(String document)
         {
             var context = new SchoolDBContext();
-            var student = (from Student in context.Students where Student.Document == document select Student);
-            if (student.Count() == 0)
+            var student = context.Students.Where(x => x.Document == document);
+            if (!student.Any())
             {
-                Console.WriteLine($"The student identified with {document} don't exists.");
+                return ($"The student identified with {document} don't exists.");
             }
             else
             {
-                context.Students.Remove(student.First());
-                context.SaveChanges();
+                try
+                {
+                    context.Students.Remove(student.First());
+                    context.SaveChanges();
+                    return ($"The student identified with {document} was removed satisfactorily");
+                }                
+                catch (System.Data.Entity.Infrastructure.DbUpdateException)
+                {
+                    return ($"The student can't be deleted, there are courses with that student as headman");
+                }
             }
         } 
     }

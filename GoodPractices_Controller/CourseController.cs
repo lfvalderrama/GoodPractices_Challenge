@@ -12,9 +12,9 @@ namespace GoodPractices_Controller
         public void CreateCourse(string document, string name, int age, ForeignLanguage language)
         {
             var context = new SchoolDBContext();
-            //Course course = new Student(document, name, age, language);
+            //Course course = new Course(document, name, age, language);
             //context.Students.Add(student);
-            //context.SaveChanges();
+            context.SaveChanges();
         }
 
         public void DeleteStudent(String document)
