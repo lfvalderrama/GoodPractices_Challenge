@@ -9,8 +9,7 @@ namespace GoodPractices_Model
 {
     public class Student : Person
     {
-        public Dictionary<Subject, List<Grade>> PartialGrades { get; }
-        public Dictionary<Subject, List<Grade>> FinalGrades { get; }
+        public List<Grade> Grades { get; set; }
         public ForeignLanguage ForeignLanguaje { set; get; }
 
 
@@ -19,15 +18,13 @@ namespace GoodPractices_Model
             this.Document = document;
             this.Age = age;
             this.Name = name;
-            this.PartialGrades = new Dictionary<Subject, List<Grade>>();
-            this.FinalGrades = new Dictionary<Subject, List<Grade>>();
+            this.Grades = new List<Grade>();
             this.ForeignLanguaje = foreignLanguaje;
         }
 
         public Student()
         {
-            this.PartialGrades = new Dictionary<Subject, List<Grade>>();
-            this.FinalGrades = new Dictionary<Subject, List<Grade>>();
+            this.Grades = new List<Grade>();
         }
     }
 }

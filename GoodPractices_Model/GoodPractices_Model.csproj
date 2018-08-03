@@ -52,6 +52,7 @@
     <Compile Include="Course.cs" />
     <Compile Include="ForeignLanguage.cs" />
     <Compile Include="Grade.cs" />
+    <Compile Include="GradeType.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Migrations\201808011929231_CreateClasses.cs" />
     <Compile Include="Migrations\201808011929231_CreateClasses.Designer.cs">
@@ -72,6 +73,10 @@
     <Compile Include="Migrations\201808021346549_AddDocumentField.cs" />
     <Compile Include="Migrations\201808021346549_AddDocumentField.Designer.cs">
       <DependentUpon>201808021346549_AddDocumentField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808031643172_gradesRelationAdded_ChangesOnCourse.cs" />
+    <Compile Include="Migrations\201808031643172_gradesRelationAdded_ChangesOnCourse.Designer.cs">
+      <DependentUpon>201808031643172_gradesRelationAdded_ChangesOnCourse.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Person.cs" />
@@ -101,6 +106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808021346549_AddDocumentField.resx">
       <DependentUpon>201808021346549_AddDocumentField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808031643172_gradesRelationAdded_ChangesOnCourse.resx">
+      <DependentUpon>201808031643172_gradesRelationAdded_ChangesOnCourse.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
