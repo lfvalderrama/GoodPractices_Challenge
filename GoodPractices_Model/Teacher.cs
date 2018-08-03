@@ -15,6 +15,13 @@ namespace GoodPractices_Model
         {
         }
 
+        public Teacher(String name, string cc, int age)
+        {
+            this.Age = age;
+            this.Document = cc;
+            this.Name = name;
+        }
+
         public Teacher(Course course, List<Subject> subjects, String name, string cc, int age)
         {
             this.Course = course;
