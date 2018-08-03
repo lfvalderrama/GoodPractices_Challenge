@@ -83,7 +83,7 @@ namespace GoodPractices_Controller
             }
             else
             {
-                return $"The teacher identified by {document} does't exists";
+                return $"The teacher identified by {document} doesn't exists";
             }
         }
     }

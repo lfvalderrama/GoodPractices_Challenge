@@ -9,12 +9,13 @@ namespace GoodPractices_Controller
 {
     class SubjectControler
     {
+        #region CreateSubject
         public String CreateSubject(string name, string content)
         {
             var context = new SchoolDBContext();
-            if (!context.Subjects.Where(s => s.Name ==  name).Any())
+            if (!context.Subjects.Where(s => s.Name == name).Any())
             {
-                Subject subject = new Subject(name,content);
+                Subject subject = new Subject(name, content);
                 context.Subjects.Add(subject);
                 context.SaveChanges();
                 return $"The subject {name} was created satisfactorily";
@@ -24,7 +25,9 @@ namespace GoodPractices_Controller
                 return $"The subject named {name} already exists.";
             }
         }
+        #endregion
 
+        #region CreateLanguage
         public String CreateLanguage(Language language, string name, string content)
         {
             var context = new SchoolDBContext();
@@ -41,7 +44,9 @@ namespace GoodPractices_Controller
                 return $"The subject named {name} already exists.";
             }
         }
+        #endregion
 
+        #region DeleteSubject
         public String DeleteSubject(String name)
         {
             var context = new SchoolDBContext();
@@ -63,8 +68,22 @@ namespace GoodPractices_Controller
                 {
                     return ($"The subject can't be deleted, there are students or teachers with that subject");
                 }
-                
+
             }
         }
+        #endregion
+
+        #region GetSubjects
+        public void GetSubjects()
+        {
+            var context = new SchoolDBContext();
+            var subjects = context.Subjects;
+            Console.WriteLine("......SUBJECTS......");
+            foreach (var subject in subjects)
+            {
+                Console.WriteLine($"{subject.Name}");
+            }
+        }
+        #endregion
     }
 }

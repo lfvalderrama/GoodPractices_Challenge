@@ -13,13 +13,12 @@ namespace GoodPractices_Model
         public ForeignLanguage ForeignLanguaje { set; get; }
 
 
-        public Student(string document, string name, int age, ForeignLanguage foreignLanguaje)
+        public Student(string document, string name, int age)
         {
             this.Document = document;
             this.Age = age;
             this.Name = name;
             this.Grades = new List<Grade>();
-            this.ForeignLanguaje = foreignLanguaje;
         }
 
         public Student()

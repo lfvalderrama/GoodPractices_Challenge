@@ -8,12 +8,12 @@ namespace GoodPractices_Controller
 {
     class StudentController
     {
-        public String CreateStudent(string document, string name, int age, ForeignLanguage language)
+        public String CreateStudent(string document, string name, int age)
         {
             var context = new SchoolDBContext();            
             if (!context.Students.Where(x => x.Document == document).Any())
             {
-                Student student = new Student(document, name, age, language);
+                Student student = new Student(document, name, age);
                 context.Students.Add(student);
                 context.SaveChanges();
                 return $"The Student {name} was created satisfactorily";
