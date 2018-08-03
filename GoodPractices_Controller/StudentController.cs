@@ -50,5 +50,28 @@ namespace GoodPractices_Controller
             }
         }
         #endregion
+
+        #region AssignForeignLanguage
+        public String AssignForeignLanguage(String studentDocument, String nameLanguage)
+        {
+            var context = new SchoolDBContext();
+            var student = context.Students.Where(x => x.Document == studentDocument);
+            var foreignLanguage = context.ForeignLanguages.Where(f => f.Name == nameLanguage);
+            if (!student.Any())
+            {
+                return ($"The student identified with {studentDocument} don't exists.");
+            }
+            if (foreignLanguage.Any())
+            {
+                student.First().ForeignLanguaje = foreignLanguage.First();
+                context.SaveChanges();
+                return $"The foreign language {nameLanguage} was assigned satisfactorily to the student identified by {studentDocument}";
+            }
+            else
+            {
+                return $"The foreign language {nameLanguage} does not exists, or isn't a valid foreign language";
+            }
+        }
+        #endregion
     }
 }

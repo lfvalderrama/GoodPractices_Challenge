@@ -37,9 +37,13 @@ namespace GoodPractices_Controller
             //subject_controller.GetSubjects();
             //course_controller.GetSUbjectsByCourse();
 
-            Console.WriteLine(course_controller.ReasignHeadman("10B", "3515328"));
-            Console.WriteLine(course_controller.ReasignHeadman("10B", "35153289"));
-            Console.WriteLine(course_controller.ReasignHeadman("10B", "351531"));
+            //Console.WriteLine(course_controller.ReasignHeadman("10B", "3515328"));
+            //Console.WriteLine(course_controller.ReasignHeadman("10B", "35153289"));
+            //Console.WriteLine(course_controller.ReasignHeadman("10B", "351531"));
+
+            Console.WriteLine(student_controller.AssignForeignLanguage("351531", "french 2"));
+            Console.WriteLine(student_controller.AssignForeignLanguage("351531", "Math 1"));
+
 
         }
     }
