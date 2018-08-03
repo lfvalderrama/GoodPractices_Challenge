@@ -8,6 +8,7 @@ namespace GoodPractices_Controller
 {
     class StudentController
     {
+        #region CreateStudent
         public String CreateStudent(string document, string name, int age)
         {
             var context = new SchoolDBContext();            
@@ -23,7 +24,9 @@ namespace GoodPractices_Controller
                 return ($"The student identified with {document} already exists.");
             }
         }
+        #endregion
 
+        #region DeleteStudent
         public String DeleteStudent(String document)
         {
             var context = new SchoolDBContext();
@@ -45,6 +48,7 @@ namespace GoodPractices_Controller
                     return ($"The student can't be deleted, there are courses with that student as headman");
                 }
             }
-        } 
+        }
+        #endregion
     }
 }

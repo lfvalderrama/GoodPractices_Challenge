@@ -26,20 +26,27 @@ namespace GoodPractices_Controller
                     }
                     else
                     {
-                        if (student.Any())
+                        if (!context.Courses.Where(c => c.Headman.Document == headmanDocument).Any())
                         {
+                            if (student.Any())
+                            {
 
-                            Course course = new Course(name, student.First());
-                            course.Students = new List<Student>();
-                            course.Students.Add(student.First());
-                            context.Courses.Add(course);
-                            teacher.First().Course = course;
-                            context.SaveChanges();
-                            return $"The course {name} was created satisfactorily";
+                                Course course = new Course(name, student.First());
+                                course.Students = new List<Student>();
+                                course.Students.Add(student.First());
+                                context.Courses.Add(course);
+                                teacher.First().Course = course;
+                                context.SaveChanges();
+                                return $"The course {name} was created satisfactorily";
+                            }
+                            else
+                            {
+                                return $"The student with the document {headmanDocument} doesn't exists, you can't create a course without a valid headman";
+                            }
                         }
                         else
                         {
-                            return $"The student with the document {headmanDocument} doesn't exists, you can't create a course without a valid headman";
+                            return $"The student identified by {headmanDocument} is already headman of the course {context.Courses.Where(c => c.Headman.Document == headmanDocument).First().Name}";
                         }
                     }
                 }
@@ -96,9 +103,16 @@ namespace GoodPractices_Controller
                     {
                         if (!course.First().Students.Contains(student.First()))
                         {
-                            course.First().Students.Add(student.First());
-                            context.SaveChanges();
-                            return $"The student identified by {studentDocument} was assigned to {courseName} satisfactorily";
+                            if (course.First().Students.Count() < 30)
+                            {
+                                course.First().Students.Add(student.First());
+                                context.SaveChanges();
+                                return $"The student identified by {studentDocument} was assigned to {courseName} satisfactorily";
+                            }
+                            else
+                            {
+                                return $"The course {courseName} can't have more than 30 students";
+                            }
                         }
                         else
                         {
@@ -199,6 +213,48 @@ namespace GoodPractices_Controller
                 }
             }
         }
+        #endregion
+
+        #region ReasignHeadman
+
+        public String ReasignHeadman(String courseName, String headmanDocument)
+        {
+            var context = new SchoolDBContext();
+            var student = context.Students.Where(s => s.Document == headmanDocument);
+            var course = context.Courses.Include(t => t.Students).Where(c => c.Name == courseName);
+            if (context.Courses.Where(c => c.Name == courseName).Any())
+            {
+                if (student.Any())
+                {
+                    if (context.Courses.Where(c => c.Headman.Document == headmanDocument).Any())
+                    {
+                        return $"The student identified by {headmanDocument} already has assigned as headman in the course {context.Courses.Where(c => c.Headman.Document == headmanDocument).First().Name}";
+                    }
+                    else
+                    {
+                        if (course.First().Students.Contains(student.First()))
+                        {
+                            course.First().Headman = student.First();
+                            context.SaveChanges();
+                            return $"The headman of the coruse {courseName} was reasigned satisfactorily";
+                        }
+                        else
+                        {
+                            return $"The student identified by {headmanDocument} is not in teh course {courseName}";
+                        }
+                    }
+                }
+                else
+                {
+                    return $"The student identified by {headmanDocument} doesn't exists";
+                }
+            }
+            else
+            {
+                return $"The course {courseName} doesn't exists";
+            }
+        }
+
         #endregion
     }
 }

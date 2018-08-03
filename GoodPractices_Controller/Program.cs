@@ -20,7 +20,7 @@ namespace GoodPractices_Controller
             //Console.WriteLine(course_controller.CreateCourse( "9A", "351531", "6846684"));
             //Console.WriteLine(course_controller.DeleteCourse("11A"));
             //Console.WriteLine(teacherController.CreateTeacher("pedro", "6846685", 28));
-            //Console.WriteLine(student_controller.CreateStudent("351532", "pepito", 11));
+            Console.WriteLine(student_controller.CreateStudent("3515328", "kevinsito", 11));
             //Console.WriteLine(course_controller.CreateCourse("10B", "351532", "6846685"));
             //Console.WriteLine(teacherController.DeleteTeacher("6846684"));
             //Console.WriteLine(teacherController.AddSubjectToTeacher("french 2", "6846684"));
@@ -28,14 +28,18 @@ namespace GoodPractices_Controller
             //Console.WriteLine(teacherController.AddSubjectToTeacher("Math 2", "6846684"));
             //Console.WriteLine(teacherController.AddSubjectToTeacher("Math 1", "68466824"));
 
-            //Console.WriteLine(course_controller.AddStudentToCourse("351532", "10B"));
+            Console.WriteLine(course_controller.AddStudentToCourse("3515328", "10B"));
             //course_controller.GetHeadmans();
             //Console.WriteLine(course_controller.AddSubjectToCourse("Math 1", "10B"));
             //Console.WriteLine(course_controller.AddSubjectToCourse("Math 1", "10B"));
             //Console.WriteLine(course_controller.AddSubjectToCourse("Math 1", "15B"));
-            course_controller.GetCourses();
-            subject_controller.GetSubjects();
-            course_controller.GetSUbjectsByCourse();
+            //course_controller.GetCourses();
+            //subject_controller.GetSubjects();
+            //course_controller.GetSUbjectsByCourse();
+
+            Console.WriteLine(course_controller.ReasignHeadman("10B", "3515328"));
+            Console.WriteLine(course_controller.ReasignHeadman("10B", "35153289"));
+            Console.WriteLine(course_controller.ReasignHeadman("10B", "351531"));
 
         }
     }
