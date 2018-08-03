@@ -86,6 +86,16 @@ namespace GoodPractices_Controller
                 return $"The teacher identified by {document} doesn't exists";
             }
         }
+        #endregion
+
+        #region GetGradesOfStudentsByTeacher
+        public String GetGradesOfStudentsByTeacher(string teacherDocument)
+        {
+            var context = new SchoolDBContext();
+            var teacher = context.Teachers.Include(t => t.Subjects).Where(t => t.Document == teacherDocument);
+            //var stud
+            return "";
+        }
+        #endregion
     }
-#endregion
 }
