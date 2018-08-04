@@ -56,28 +56,30 @@ namespace GoodPractices_Controller
         public String CalculateFinalGradeToStudent(string period, String studentDocument)
         {
             var context = new SchoolDBContext();
-            var student = context.Students.Include(s => s.Grades).Where(s => s.Document == studentDocument);
-            var grades = student.First().Grades.Where(g => g.Period == period).GroupBy(g => g.Subject);
-            Console.WriteLine(grades.ToString());
+            var student = context.Students.Include(s => s.Grades).Include(g=>g.Grades.Select(s=>s.Subject)).Where(s => s.Document == studentDocument);
             Dictionary<Subject, float> finalGrades = new Dictionary<Subject, float>();
             if (student.Any())
             {
+                var grades = student.First().Grades.Where(g => g.Period == period).GroupBy(g => g.Subject, (key, g) => new { Subject = key, Grades = g.ToList() });
                 foreach (var subject in grades)
                 {
-                    Console.WriteLine(subject.Key);
-                    finalGrades[subject.Key] = 0;
-                    foreach (var grade in subject)
+                    finalGrades[subject.Subject] = 0;
+                    bool hasFinal = false;
+                    foreach (var grade in subject.Grades)
                     {
-                        if (grade.Type == GradeType.PARTIAL1) finalGrades[subject.Key] += (float)(grade.Score * 0.3);
-                        if (grade.Type == GradeType.PARTIAL2) finalGrades[subject.Key] += (float)(grade.Score * 0.3);
-                        if (grade.Type == GradeType.PARTIAL3) finalGrades[subject.Key] += (float)(grade.Score * 0.4);
+                        if (grade.Type == GradeType.PARTIAL1) finalGrades[subject.Subject] += (float)(grade.Score * 0.3);
+                        if (grade.Type == GradeType.PARTIAL2) finalGrades[subject.Subject] += (float)(grade.Score * 0.3);
+                        if (grade.Type == GradeType.PARTIAL3) finalGrades[subject.Subject] += (float)(grade.Score * 0.4);
+                        if (grade.Type == GradeType.FINAL) hasFinal = true;
                     }
-                    Grade new_grade = new Grade(period, finalGrades[subject.Key], subject.Key, GradeType.FINAL);
-                    student.First().Grades.Add(new_grade);
-
+                    if (!hasFinal)
+                    {
+                        Grade new_grade = new Grade(period, finalGrades[subject.Subject], subject.Subject, GradeType.FINAL);
+                        student.First().Grades.Add(new_grade);
+                    }
+                    context.SaveChanges();                    
                 }
-                context.SaveChanges();
-                return $"The Partial grade has been added satisfactorily to the student {student.First().Name}";
+                return $"All final grades of the student {student.First().Name} had been calculed satisfactorily";
             }
             else
             {
