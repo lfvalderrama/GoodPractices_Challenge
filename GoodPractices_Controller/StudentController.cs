@@ -73,5 +73,39 @@ namespace GoodPractices_Controller
             }
         }
         #endregion
+
+        #region GetGradesByPeriod
+        public void GetGradesByPeriod(String studentDocument)
+        {
+            var context = new SchoolDBContext();
+            var student = context.Students.Include(s => s.Grades).Include(g => g.Grades.Select(s => s.Subject)).Where(s => s.Document == studentDocument);
+            if (!student.Any())
+            {
+                Console.WriteLine($"The student identified with {studentDocument} doesn't exists.");
+            }
+            else
+            {
+                Console.WriteLine($"Grades of the student {student.First().Name}");
+                var grades = student.First().Grades.GroupBy(g => g.Period, (key, g) => new { Period = key, Grades = g.ToList() });
+                foreach (var period in grades)
+                {
+                    Console.WriteLine($"Period {period.Period}");
+                    Console.WriteLine(".......................");
+                    var gradePerSubject = period.Grades.GroupBy(g => g.Subject, (key, g) => new { Subject = key, Grades = g.ToList() });
+                    foreach (var subject in gradePerSubject)
+                    {
+                        Console.WriteLine($"Subject {subject.Subject.Name}");
+                        Console.WriteLine("........................");
+                        Console.WriteLine($"Type...........Score");
+                        foreach (var grade in subject.Grades)
+                        {
+                            Console.WriteLine($"{grade.Type}.........{grade.Score}");
+                        }
+                        Console.WriteLine("##################\n");
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

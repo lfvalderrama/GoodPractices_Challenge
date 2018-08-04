@@ -43,10 +43,12 @@ namespace GoodPractices_Controller
             //Console.WriteLine(course_controller.ReasignHeadman("9A", "351531"));
 
             //Console.WriteLine(student_controller.AssignForeignLanguage("351531", "french 2"));
-           // Console.WriteLine(student_controller.AssignForeignLanguage("351531", "Math 1"));
+            // Console.WriteLine(student_controller.AssignForeignLanguage("351531", "Math 1"));
 
             //Console.WriteLine(gradeController.AddPartialGradeToStudent("2018-1", 4.5f , "french 2", GradeType.PARTIAL2, "351531"));
-            Console.WriteLine(gradeController.CalculateFinalGradeToStudent("2018-1", "3515328"));
+            //Console.WriteLine(gradeController.CalculateFinalGradeToStudent("2018-1", "3515328"));
+
+            student_controller.GetGradesByPeriod("351531");
         }
     }
 }
