@@ -89,12 +89,67 @@ namespace GoodPractices_Controller
         #endregion
 
         #region GetGradesOfStudentsByTeacher
-        public String GetGradesOfStudentsByTeacher(string teacherDocument)
+        public void GetGradesOfStudentsByTeacher(string teacherDocument)
         {
             var context = new SchoolDBContext();
             var teacher = context.Teachers.Include(t => t.Subjects).Where(t => t.Document == teacherDocument);
             //var stud
-            return "";
+            if (!teacher.Any())
+            {
+                Console.WriteLine($"The teacher identified by {teacherDocument} doesn't exists.");
+            }
+            else
+            {
+                Console.WriteLine($"Grades of the students of the subjects of the teacher {teacher.First().Name}");
+                foreach (var subject in teacher.First().Subjects)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Grades of the subject {subject.Name}");
+                    Console.WriteLine("#####################################");
+                    if (subject.GetType() == typeof(ForeignLanguage))
+                    {
+                        var students = context.Students.Include(s => s.Grades).Where(s => s.ForeignLanguaje.Name == subject.Name);
+                        foreach (var student in students)
+                        {
+                            Console.WriteLine($"Student {student.Name}");
+                            Console.WriteLine($"-------------------------");
+                            var gradesByPeriod = student.Grades.Where(g => g.Subject == subject).GroupBy(p=>p.Period,(key,p) => new { Period = key, Grades = p.ToList() });
+                            foreach (var grades in gradesByPeriod)
+                            {
+                                Console.WriteLine($"Period {grades.Period}");
+                                Console.WriteLine("Type...........Score");
+                                foreach (var grade in grades.Grades)
+                                {
+                                    Console.WriteLine($"{grade.Type}..........{grade.Score}");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var courses = context.Courses.Include(c => c.Students).Include(c=>c.Students.Select(s=>s.Grades)).Where(c => c.Subjects.Any(s=>s.Name==subject.Name));
+                        foreach (var course in courses)
+                        {
+                            var students = course.Students;
+                            foreach (var student in students)
+                            {
+                                Console.WriteLine($"Student {student.Name}");
+                                Console.WriteLine($"-------------------------");
+                                var gradesByPeriod = student.Grades.Where(g => g.Subject == subject).GroupBy(p => p.Period, (key, p) => new { Period = key, Grades = p.ToList() });
+                                foreach (var grades in gradesByPeriod)
+                                {
+                                    Console.WriteLine($"Period {grades.Period}");
+                                    Console.WriteLine("Type...........Score");
+                                    foreach (var grade in grades.Grades)
+                                    {
+                                        Console.WriteLine($"{grade.Type}..........{grade.Score}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         #endregion
     }

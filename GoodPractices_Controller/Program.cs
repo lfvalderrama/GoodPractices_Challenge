@@ -48,7 +48,8 @@ namespace GoodPractices_Controller
             //Console.WriteLine(gradeController.AddPartialGradeToStudent("2018-1", 4.5f , "french 2", GradeType.PARTIAL2, "351531"));
             //Console.WriteLine(gradeController.CalculateFinalGradeToStudent("2018-1", "3515328"));
 
-            student_controller.GetGradesByPeriod("351531");
+            //student_controller.GetGradesByPeriod("351531");
+            teacherController.GetGradesOfStudentsByTeacher("6846685");
         }
     }
 }
