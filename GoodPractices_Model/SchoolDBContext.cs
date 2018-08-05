@@ -4,11 +4,11 @@ namespace GoodPractices_Model
 {
     public class SchoolDBContext : DbContext
     {
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
-        public DbSet<ForeignLanguage> ForeignLanguages { get; set; }
-        public DbSet<Grade> Grades { get; set; }
+        public virtual DbSet<Teacher> Teachers { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<Course> Courses { get; set; }
+        public virtual DbSet<Subject> Subjects { get; set; }
+        public virtual DbSet<ForeignLanguage> ForeignLanguages { get; set; }
+        public virtual DbSet<Grade> Grades { get; set; }
     }
 }

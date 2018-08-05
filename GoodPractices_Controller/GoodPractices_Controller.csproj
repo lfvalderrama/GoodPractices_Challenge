@@ -54,7 +54,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudentController.cs" />
-    <Compile Include="SubjectControler.cs" />
+    <Compile Include="SubjectController.cs" />
     <Compile Include="TeacherController.cs" />
   </ItemGroup>
   <ItemGroup>

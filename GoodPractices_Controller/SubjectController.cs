@@ -7,12 +7,19 @@ using GoodPractices_Model;
 
 namespace GoodPractices_Controller
 {
-    class SubjectControler
+    public class SubjectController
     {
+        private SchoolDBContext context;
+
+        public SubjectController(SchoolDBContext context)
+        {
+            this.context = context;
+        }
+
+
         #region CreateSubject
         public String CreateSubject(string name, string content)
         {
-            var context = new SchoolDBContext();
             if (!context.Subjects.Where(s => s.Name == name).Any())
             {
                 Subject subject = new Subject(name, content);
@@ -30,8 +37,7 @@ namespace GoodPractices_Controller
         #region CreateLanguage
         public String CreateLanguage(Language language, string name, string content)
         {
-            var context = new SchoolDBContext();
-            if (!context.Subjects.Where(s => s.Name == name).Any())
+            if (!context.ForeignLanguages.Where(s => s.Name == name).Any())
             {
                 ForeignLanguage new_language = new ForeignLanguage(language, name, content);
                 context.ForeignLanguages.Add(new_language);
@@ -49,7 +55,6 @@ namespace GoodPractices_Controller
         #region DeleteSubject
         public String DeleteSubject(String name)
         {
-            var context = new SchoolDBContext();
             var subject = context.Subjects.Where(s => s.Name == name);
             if (!subject.Any())
             {
@@ -76,7 +81,6 @@ namespace GoodPractices_Controller
         #region GetSubjects
         public void GetSubjects()
         {
-            var context = new SchoolDBContext();
             var subjects = context.Subjects;
             Console.WriteLine("......SUBJECTS......");
             foreach (var subject in subjects)
