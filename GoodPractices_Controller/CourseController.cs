@@ -202,14 +202,13 @@ namespace GoodPractices_Controller
         {
             var context = new SchoolDBContext();
             var courses = context.Courses.Include(c => c.Subjects);
-            Console.WriteLine("......COURSE......");
-            foreach (var course in courses)
-            {
-                Console.WriteLine($"{course.Name}");
-                Console.WriteLine("...........SUBJECTS......");
+            foreach (var course in courses)            {
+
+                Console.WriteLine($"\n\n..........COURSE {course.Name} .......");
+                Console.WriteLine("\n...........SUBJECTS.......");
                 foreach (var subject in course.Subjects)
                 {
-                    Console.WriteLine($"...........{subject.Name}");
+                    Console.WriteLine($"{subject.Name}");
                 }
             }
         }
@@ -240,7 +239,7 @@ namespace GoodPractices_Controller
                         }
                         else
                         {
-                            return $"The student identified by {headmanDocument} is not in teh course {courseName}";
+                            return $"The student identified by {headmanDocument} is not in the course {courseName}";
                         }
                     }
                 }

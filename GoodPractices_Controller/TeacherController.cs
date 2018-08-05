@@ -11,7 +11,7 @@ namespace GoodPractices_Controller
     class TeacherController
     {
         #region CreateTeacher
-        public String CreateTeacher(String name, string document, int age)
+        public String CreateTeacher(string document, string name, int age)
         {
             var context = new SchoolDBContext();
             if (!context.Teachers.Where(t => t.Document == document).Any())
@@ -111,18 +111,7 @@ namespace GoodPractices_Controller
                         var students = context.Students.Include(s => s.Grades).Where(s => s.ForeignLanguaje.Name == subject.Name);
                         foreach (var student in students)
                         {
-                            Console.WriteLine($"Student {student.Name}");
-                            Console.WriteLine($"-------------------------");
-                            var gradesByPeriod = student.Grades.Where(g => g.Subject == subject).GroupBy(p=>p.Period,(key,p) => new { Period = key, Grades = p.ToList() });
-                            foreach (var grades in gradesByPeriod)
-                            {
-                                Console.WriteLine($"Period {grades.Period}");
-                                Console.WriteLine("Type...........Score");
-                                foreach (var grade in grades.Grades)
-                                {
-                                    Console.WriteLine($"{grade.Type}..........{grade.Score}");
-                                }
-                            }
+                            GradesByStudent(student, subject);
                         }
                     }
                     else
@@ -133,21 +122,28 @@ namespace GoodPractices_Controller
                             var students = course.Students;
                             foreach (var student in students)
                             {
-                                Console.WriteLine($"Student {student.Name}");
-                                Console.WriteLine($"-------------------------");
-                                var gradesByPeriod = student.Grades.Where(g => g.Subject == subject).GroupBy(p => p.Period, (key, p) => new { Period = key, Grades = p.ToList() });
-                                foreach (var grades in gradesByPeriod)
-                                {
-                                    Console.WriteLine($"Period {grades.Period}");
-                                    Console.WriteLine("Type...........Score");
-                                    foreach (var grade in grades.Grades)
-                                    {
-                                        Console.WriteLine($"{grade.Type}..........{grade.Score}");
-                                    }
-                                }
+                                GradesByStudent(student, subject);
                             }
                         }
                     }
+                }
+            }
+        }
+        #endregion
+
+        #region GradesByStudent
+        private void GradesByStudent(Student student, Subject subject)
+        {
+            Console.WriteLine($"\nStudent {student.Name}");
+            Console.WriteLine($"-------------------------");
+            var gradesByPeriod = student.Grades.Where(g => g.Subject == subject).GroupBy(p => p.Period, (key, p) => new { Period = key, Grades = p.ToList() });
+            foreach (var grades in gradesByPeriod)
+            {
+                Console.WriteLine($"Period {grades.Period}");
+                Console.WriteLine("Type...........Score");
+                foreach (var grade in grades.Grades)
+                {
+                    Console.WriteLine($"{grade.Type}..........{grade.Score}");
                 }
             }
         }

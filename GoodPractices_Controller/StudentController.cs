@@ -89,19 +89,18 @@ namespace GoodPractices_Controller
                 var grades = student.First().Grades.GroupBy(g => g.Period, (key, g) => new { Period = key, Grades = g.ToList() });
                 foreach (var period in grades)
                 {
-                    Console.WriteLine($"Period {period.Period}");
+                    Console.WriteLine($"\nPeriod {period.Period}");
                     Console.WriteLine(".......................");
                     var gradePerSubject = period.Grades.GroupBy(g => g.Subject, (key, g) => new { Subject = key, Grades = g.ToList() });
                     foreach (var subject in gradePerSubject)
                     {
-                        Console.WriteLine($"Subject {subject.Subject.Name}");
+                        Console.WriteLine($"\nSubject {subject.Subject.Name}");
                         Console.WriteLine("........................");
                         Console.WriteLine($"Type...........Score");
                         foreach (var grade in subject.Grades)
                         {
                             Console.WriteLine($"{grade.Type}.........{grade.Score}");
                         }
-                        Console.WriteLine("##################\n");
                     }
                 }
             }
