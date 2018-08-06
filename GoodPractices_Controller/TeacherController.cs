@@ -8,12 +8,18 @@ using System.Data.Entity;
 
 namespace GoodPractices_Controller
 {
-    class TeacherController
+    public class TeacherController
     {
+        private SchoolDBContext context;
+
+        public TeacherController(SchoolDBContext context)
+        {
+            this.context = context;
+        }
+
         #region CreateTeacher
         public String CreateTeacher(string document, string name, int age)
         {
-            var context = new SchoolDBContext();
             if (!context.Teachers.Where(t => t.Document == document).Any())
             {
                 Teacher teacher = new Teacher(name, document,age);
@@ -31,7 +37,6 @@ namespace GoodPractices_Controller
         #region DeleteTeacher
         public String DeleteTeacher(String document)
         {
-            var context = new SchoolDBContext();
             var teacher = context.Teachers.Where(c => c.Document == document);
             if (!teacher.Any())
             {
@@ -58,7 +63,6 @@ namespace GoodPractices_Controller
         #region AddSubjectToTeacher
         public String AddSubjectToTeacher(String subjectName, String document)
         {
-            var context = new SchoolDBContext();
             var subject = context.Subjects.Include(s => s.Teachers).Where(s => s.Name == subjectName);
             var teacher = context.Teachers.Where(t => t.Document == document);
             if (teacher.Any())
@@ -91,7 +95,6 @@ namespace GoodPractices_Controller
         #region GetGradesOfStudentsByTeacher
         public void GetGradesOfStudentsByTeacher(string teacherDocument)
         {
-            var context = new SchoolDBContext();
             var teacher = context.Teachers.Include(t => t.Subjects).Where(t => t.Document == teacherDocument);
             //var stud
             if (!teacher.Any())

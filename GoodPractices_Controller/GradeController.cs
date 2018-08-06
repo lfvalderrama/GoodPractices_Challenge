@@ -8,12 +8,18 @@ using System.Data.Entity;
 
 namespace GoodPractices_Controller
 {
-    class GradeController
+    public class GradeController
     {
+        private SchoolDBContext context;
+
+        public GradeController(SchoolDBContext context)
+        {
+            this.context = context;
+        }
+
         #region AddPartialGradeToStudent
         public String AddPartialGradeToStudent(string period, float score, String subjectName, GradeType type, String studentDocument)
         {
-            var context = new SchoolDBContext();
             var student = context.Students.Include(s => s.Grades).Where(s => s.Document == studentDocument);
             var subject = context.Subjects.Where(s => s.Name == subjectName);
             var grades = student.First().Grades;
@@ -55,7 +61,6 @@ namespace GoodPractices_Controller
         #region CalculateFinalGradeToStudent
         public String CalculateFinalGradeToStudent(string period, String studentDocument)
         {
-            var context = new SchoolDBContext();
             var student = context.Students.Include(s => s.Grades).Include(g=>g.Grades.Select(s=>s.Subject)).Where(s => s.Document == studentDocument);
             Dictionary<Subject, float> finalGrades = new Dictionary<Subject, float>();
             if (student.Any())

@@ -6,12 +6,18 @@ using System.Linq;
 
 namespace GoodPractices_Controller
 {
-    class StudentController
+    public class StudentController
     {
+        private SchoolDBContext context;
+
+        public StudentController(SchoolDBContext context)
+        {
+            this.context = context;
+        }
+
         #region CreateStudent
         public String CreateStudent(string document, string name, int age)
-        {
-            var context = new SchoolDBContext();            
+        {          
             if (!context.Students.Where(x => x.Document == document).Any())
             {
                 Student student = new Student(document, name, age);
@@ -29,7 +35,6 @@ namespace GoodPractices_Controller
         #region DeleteStudent
         public String DeleteStudent(String document)
         {
-            var context = new SchoolDBContext();
             var student = context.Students.Where(x => x.Document == document);
             if (!student.Any())
             {
@@ -54,7 +59,6 @@ namespace GoodPractices_Controller
         #region AssignForeignLanguage
         public String AssignForeignLanguage(String studentDocument, String nameLanguage)
         {
-            var context = new SchoolDBContext();
             var student = context.Students.Where(x => x.Document == studentDocument);
             var foreignLanguage = context.ForeignLanguages.Where(f => f.Name == nameLanguage);
             if (!student.Any())
@@ -77,7 +81,6 @@ namespace GoodPractices_Controller
         #region GetGradesByPeriod
         public void GetGradesByPeriod(String studentDocument)
         {
-            var context = new SchoolDBContext();
             var student = context.Students.Include(s => s.Grades).Include(g => g.Grades.Select(s => s.Subject)).Where(s => s.Document == studentDocument);
             if (!student.Any())
             {

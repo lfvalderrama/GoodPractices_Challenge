@@ -7,11 +7,11 @@ namespace GoodPractices_Controller
     {
         static void Main(string[] args)
         {
-            StudentController student_controller = new StudentController();
-            SubjectControler subject_controller = new SubjectControler();
-            CourseController course_controller = new CourseController();
-            TeacherController teacherController = new TeacherController();
-            GradeController gradeController = new GradeController();
+            StudentController student_controller = new StudentController(new SchoolDBContext());
+            SubjectController subject_controller = new SubjectController(new SchoolDBContext());
+            CourseController course_controller = new CourseController(new SchoolDBContext());
+            TeacherController teacherController = new TeacherController(new SchoolDBContext());
+            GradeController gradeController = new GradeController(new SchoolDBContext());
 
             string option = "100";
             

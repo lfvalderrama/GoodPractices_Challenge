@@ -8,12 +8,17 @@ using System.Data.Entity;
 
 namespace GoodPractices_Controller
 {
-    class CourseController
+    public class CourseController
     {
+        private SchoolDBContext context;
+
+        public CourseController(SchoolDBContext context)
+        {
+            this.context = context;
+        }
         #region CreateCourse
         public String CreateCourse(String name, String headmanDocument, String teacherDocument)
         {
-            var context = new SchoolDBContext();
             var student = context.Students.Where(s => s.Document == headmanDocument);
             var teacher = context.Teachers.Include(t => t.Course).Where(t => t.Document == teacherDocument);
             if (!context.Courses.Where(c => c.Name == name).Any())
@@ -65,7 +70,6 @@ namespace GoodPractices_Controller
         #region DeleteCourse
         public String DeleteCourse(String name)
         {
-            var context = new SchoolDBContext();
             var course = context.Courses.Where(c => c.Name == name);
             if (!course.Any())
             {
@@ -92,7 +96,6 @@ namespace GoodPractices_Controller
         #region AddStudentToCourse
         public string AddStudentToCourse(string studentDocument, string courseName)
         {
-            var context = new SchoolDBContext();
             var course = context.Courses.Include(c => c.Students).Where(c => c.Name == courseName);
             var student = context.Students.Where(s => s.Document == studentDocument);
             if (course.Any())
@@ -140,7 +143,6 @@ namespace GoodPractices_Controller
         public String AddSubjectToCourse(String subjectName, String courseName)
         {
             {
-                var context = new SchoolDBContext();
                 var course = context.Courses.Include(c => c.Subjects).Where(c => c.Name == courseName);
                 var subject = context.Subjects.Where(s => s.Name == subjectName);
                 if (course.Any())
@@ -174,7 +176,6 @@ namespace GoodPractices_Controller
         #region GetHeadmans
         public void GetHeadmans()
         {
-            var context = new SchoolDBContext();
             var courses = context.Courses.Include(c => c.Headman);
             Console.WriteLine("Course........Headman's name....Headman's Document");
             foreach (var course in courses)
@@ -187,7 +188,6 @@ namespace GoodPractices_Controller
         #region GetCourses
         public void GetCourses()
         {
-            var context = new SchoolDBContext();
             var courses = context.Courses;
             Console.WriteLine("......COURSES......");
             foreach (var course in courses)
@@ -200,7 +200,6 @@ namespace GoodPractices_Controller
         #region GetSUbjectsByCourse
         public void GetSUbjectsByCourse()
         {
-            var context = new SchoolDBContext();
             var courses = context.Courses.Include(c => c.Subjects);
             foreach (var course in courses)            {
 
@@ -218,7 +217,6 @@ namespace GoodPractices_Controller
 
         public String ReasignHeadman(String courseName, String headmanDocument)
         {
-            var context = new SchoolDBContext();
             var student = context.Students.Where(s => s.Document == headmanDocument);
             var course = context.Courses.Include(t => t.Students).Where(c => c.Name == courseName);
             if (context.Courses.Where(c => c.Name == courseName).Any())
