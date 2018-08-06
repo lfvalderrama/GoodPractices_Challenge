@@ -10,10 +10,12 @@ namespace GoodPractices_Controller
     public class SubjectController
     {
         private SchoolDBContext context;
+        private GeneralFunctions generalFunctions;
 
         public SubjectController(SchoolDBContext context)
         {
             this.context = context;
+            this.generalFunctions = new GeneralFunctions(context);
         }
 
 
@@ -56,9 +58,10 @@ namespace GoodPractices_Controller
         public String DeleteSubject(String name)
         {
             var subject = context.Subjects.Where(s => s.Name == name);
-            if (!subject.Any())
+            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "subject", name } });
+            if (checks != "success")
             {
-                return ($"The subject named {name} don't exists.");
+                return checks;
             }
             else
             {

@@ -2,6 +2,7 @@
 using GoodPractices_Model;
 using System.Data.Entity;
 using System.Linq;
+using System.Collections.Generic;
 
 
 namespace GoodPractices_Controller
@@ -9,10 +10,12 @@ namespace GoodPractices_Controller
     public class StudentController
     {
         private SchoolDBContext context;
+        private GeneralFunctions generalFunctions;
 
         public StudentController(SchoolDBContext context)
         {
             this.context = context;
+            this.generalFunctions = new GeneralFunctions(context);
         }
 
         #region CreateStudent
@@ -33,12 +36,13 @@ namespace GoodPractices_Controller
         #endregion
 
         #region DeleteStudent
-        public String DeleteStudent(String document)
+        public String DeleteStudent(String studentDocument)
         {
-            var student = context.Students.Where(x => x.Document == document);
-            if (!student.Any())
+            var student = context.Students.Where(x => x.Document == studentDocument);
+            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            if (checks != "success")
             {
-                return ($"The student identified with {document} don't exists.");
+                return checks;
             }
             else
             {
@@ -46,7 +50,7 @@ namespace GoodPractices_Controller
                 {
                     context.Students.Remove(student.First());
                     context.SaveChanges();
-                    return ($"The student identified with {document} was removed satisfactorily");
+                    return ($"The student identified with {studentDocument} was removed satisfactorily");
                 }                
                 catch (System.Data.Entity.Infrastructure.DbUpdateException)
                 {
@@ -61,19 +65,15 @@ namespace GoodPractices_Controller
         {
             var student = context.Students.Where(x => x.Document == studentDocument);
             var foreignLanguage = context.ForeignLanguages.Where(f => f.Name == nameLanguage);
-            if (!student.Any())
+            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument }, {"foreignLanguage", nameLanguage } });
+            if (checks != "success")
             {
-                return ($"The student identified with {studentDocument} don't exists.");
+                return checks;
             }
-            if (foreignLanguage.Any())
-            {
+            else {
                 student.First().ForeignLanguaje = foreignLanguage.First();
                 context.SaveChanges();
                 return $"The foreign language {nameLanguage} was assigned satisfactorily to the student identified by {studentDocument}";
-            }
-            else
-            {
-                return $"The foreign language {nameLanguage} does not exists, or isn't a valid foreign language";
             }
         }
         #endregion
@@ -82,9 +82,10 @@ namespace GoodPractices_Controller
         public void GetGradesByPeriod(String studentDocument)
         {
             var student = context.Students.Include(s => s.Grades).Include(g => g.Grades.Select(s => s.Subject)).Where(s => s.Document == studentDocument);
-            if (!student.Any())
+            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            if (checks != "success")
             {
-                Console.WriteLine($"The student identified with {studentDocument} doesn't exists.");
+                Console.WriteLine(checks);
             }
             else
             {

@@ -11,10 +11,12 @@ namespace GoodPractices_Controller
     public class TeacherController
     {
         private SchoolDBContext context;
+        private GeneralFunctions generalFunctions;
 
         public TeacherController(SchoolDBContext context)
         {
             this.context = context;
+            this.generalFunctions = new GeneralFunctions(context);
         }
 
         #region CreateTeacher
@@ -35,12 +37,13 @@ namespace GoodPractices_Controller
         #endregion
 
         #region DeleteTeacher
-        public String DeleteTeacher(String document)
+        public String DeleteTeacher(String teacherDocument)
         {
-            var teacher = context.Teachers.Where(c => c.Document == document);
-            if (!teacher.Any())
+            var teacher = context.Teachers.Where(c => c.Document == teacherDocument);
+            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
+            if (checks != "success")
             {
-                return ($"The teacehr identified with {document} doesn't exists.");
+                return checks;
             }
             else
             {
@@ -48,7 +51,7 @@ namespace GoodPractices_Controller
                 {
                     context.Teachers.Remove(teacher.First());
                     context.SaveChanges();
-                    return $"The Teacher identified with {document} was deleted satisfactorily";
+                    return $"The Teacher identified with {teacherDocument} was deleted satisfactorily";
 
                 }
                 catch (System.Data.Entity.Infrastructure.DbUpdateException)
@@ -61,34 +64,25 @@ namespace GoodPractices_Controller
         #endregion
 
         #region AddSubjectToTeacher
-        public String AddSubjectToTeacher(String subjectName, String document)
+        public String AddSubjectToTeacher(String subjectName, String teacherDocument)
         {
             var subject = context.Subjects.Include(s => s.Teachers).Where(s => s.Name == subjectName);
-            var teacher = context.Teachers.Where(t => t.Document == document);
-            if (teacher.Any())
+            var teacher = context.Teachers.Where(t => t.Document == teacherDocument);
+            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } , { "subject", subjectName} });
+            if (checks != "success")
             {
-                if (subject.Any())
-                {
-                    if (!subject.First().Teachers.Contains(teacher.First()))
-                    {                        
-                        subject.First().Teachers.Add(teacher.First());
-                        context.SaveChanges();
-                        return $"The subject {subjectName} was assigned to the teacher identified by {document} satisfactorily";
-                    }
-                    else
-                    {
-                        return $"The teacher identified by {document} already has the subject {subjectName}";
-                    }
+                return checks;
+            }
+                if (!subject.First().Teachers.Contains(teacher.First()))
+                {                        
+                    subject.First().Teachers.Add(teacher.First());
+                    context.SaveChanges();
+                    return $"The subject {subjectName} was assigned to the teacher identified by {teacherDocument} satisfactorily";
                 }
                 else
                 {
-                    return $"The subjects {subjectName} doesn't exists.";
+                    return $"The teacher identified by {teacherDocument} already has the subject {subjectName}";
                 }
-            }
-            else
-            {
-                return $"The teacher identified by {document} doesn't exists";
-            }
         }
         #endregion
 
@@ -96,10 +90,10 @@ namespace GoodPractices_Controller
         public void GetGradesOfStudentsByTeacher(string teacherDocument)
         {
             var teacher = context.Teachers.Include(t => t.Subjects).Where(t => t.Document == teacherDocument);
-            //var stud
-            if (!teacher.Any())
+            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
+            if (checks != "success")
             {
-                Console.WriteLine($"The teacher identified by {teacherDocument} doesn't exists.");
+                Console.WriteLine(checks);
             }
             else
             {

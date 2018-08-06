@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneralFunctions.cs" />
     <Compile Include="CourseController.cs" />
     <Compile Include="GradeController.cs" />
     <Compile Include="Program.cs" />

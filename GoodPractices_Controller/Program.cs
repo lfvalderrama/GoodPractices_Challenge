@@ -39,6 +39,7 @@ namespace GoodPractices_Controller
                     "16. Assign subject to teacher.\n" +
                     "17. Assign student to course.\n" +
                     "18. Assign Foreign language to student.\n" +
+                    "19. Assign subject to course.\n" +
                     "0. EXIT\n\n" +
                     "########################################");
                 option = Console.ReadLine();
@@ -220,9 +221,19 @@ namespace GoodPractices_Controller
                         Console.WriteLine("18. Assign Foreign language to student.\n");
                         Console.WriteLine("Student Document:");
                         studentDocument = Console.ReadLine();
-                        Console.WriteLine("Foreign Language subject name");
+                        Console.WriteLine("Foreign Language subject name:");
                         subjectName = Console.ReadLine();
                         Console.WriteLine(student_controller.AssignForeignLanguage(studentDocument, subjectName));
+                        Console.WriteLine("Press a key to continue....");
+                        Console.ReadKey();
+                        break;
+                    case "19":
+                        Console.WriteLine("19. Assign subject to course.\n");
+                        Console.WriteLine("Subject name:");
+                        subjectName = Console.ReadLine();
+                        Console.WriteLine("Course Name:");
+                        courseName = Console.ReadLine();
+                        Console.WriteLine(course_controller.AddSubjectToCourse(subjectName,courseName));
                         Console.WriteLine("Press a key to continue....");
                         Console.ReadKey();
                         break;
