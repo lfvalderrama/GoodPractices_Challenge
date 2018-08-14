@@ -25,7 +25,7 @@ namespace GoodPractices_Controller
             var student = context.Students.Include(s => s.Grades).Where(s => s.Document == studentDocument);
             var subject = context.Subjects.Where(s => s.Name == subjectName);
             var grades = student.First().Grades;
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
             if (checks != "success")
             {
                 return checks;
@@ -56,7 +56,7 @@ namespace GoodPractices_Controller
         {
             var student = context.Students.Include(s => s.Grades).Include(g=>g.Grades.Select(s=>s.Subject)).Where(s => s.Document == studentDocument);
             Dictionary<Subject, float> finalGrades = new Dictionary<Subject, float>();
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
             if (checks != "success")
             {
                 return checks;

@@ -39,7 +39,7 @@ namespace GoodPractices_Controller
         public String DeleteStudent(String studentDocument)
         {
             var student = context.Students.Where(x => x.Document == studentDocument);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
             if (checks != "success")
             {
                 return checks;
@@ -65,7 +65,7 @@ namespace GoodPractices_Controller
         {
             var student = context.Students.Where(x => x.Document == studentDocument);
             var foreignLanguage = context.ForeignLanguages.Where(f => f.Name == nameLanguage);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument }, {"foreignLanguage", nameLanguage } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument }, {"foreignLanguage", nameLanguage } });
             if (checks != "success")
             {
                 return checks;
@@ -82,7 +82,7 @@ namespace GoodPractices_Controller
         public void GetGradesByPeriod(String studentDocument)
         {
             var student = context.Students.Include(s => s.Grades).Include(g => g.Grades.Select(s => s.Subject)).Where(s => s.Document == studentDocument);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
             if (checks != "success")
             {
                 Console.WriteLine(checks);

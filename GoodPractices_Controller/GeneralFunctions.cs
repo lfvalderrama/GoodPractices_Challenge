@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GoodPractices_Controller
 {
-    class GeneralFunctions
+    class GeneralFunctions : IGeneralFunctions
     {
         private SchoolDBContext context;
 
@@ -16,7 +16,7 @@ namespace GoodPractices_Controller
             this.context = context;
         }
 
-        public String checkExistence (Dictionary<String, String> input)
+        public String CheckExistence (Dictionary<String, String> input)
         {
             foreach (var pair in input)
             {

@@ -40,7 +40,7 @@ namespace GoodPractices_Controller
         public String DeleteTeacher(String teacherDocument)
         {
             var teacher = context.Teachers.Where(c => c.Document == teacherDocument);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
             if (checks != "success")
             {
                 return checks;
@@ -68,7 +68,7 @@ namespace GoodPractices_Controller
         {
             var subject = context.Subjects.Include(s => s.Teachers).Where(s => s.Name == subjectName);
             var teacher = context.Teachers.Where(t => t.Document == teacherDocument);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } , { "subject", subjectName} });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } , { "subject", subjectName} });
             if (checks != "success")
             {
                 return checks;
@@ -90,7 +90,7 @@ namespace GoodPractices_Controller
         public void GetGradesOfStudentsByTeacher(string teacherDocument)
         {
             var teacher = context.Teachers.Include(t => t.Subjects).Where(t => t.Document == teacherDocument);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
             if (checks != "success")
             {
                 Console.WriteLine(checks);

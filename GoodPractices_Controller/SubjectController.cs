@@ -58,7 +58,7 @@ namespace GoodPractices_Controller
         public String DeleteSubject(String name)
         {
             var subject = context.Subjects.Where(s => s.Name == name);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "subject", name } });
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "subject", name } });
             if (checks != "success")
             {
                 return checks;

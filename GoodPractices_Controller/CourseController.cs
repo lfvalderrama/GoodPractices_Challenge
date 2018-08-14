@@ -11,19 +11,20 @@ namespace GoodPractices_Controller
     public class CourseController
     {
         private SchoolDBContext context;
-        private GeneralFunctions generalFunctions;
+        private readonly IGeneralFunctions _generalFunctions;
 
-        public CourseController(SchoolDBContext context)
+        public CourseController(SchoolDBContext context, IGeneralFunctions generalFunctions)
         {
             this.context = context;
-            this.generalFunctions = new GeneralFunctions(context);
+            _generalFunctions = generalFunctions;
         }
+
         #region CreateCourse
         public String CreateCourse(String name, String headmanDocument, String teacherDocument)
         {
             var student = context.Students.Where(s => s.Document == headmanDocument);
             var teacher = context.Teachers.Include(t => t.Course).Where(t => t.Document == teacherDocument);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "teacher", teacherDocument } });
+            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "teacher", teacherDocument } });
             if (checks != "success")
             {
                 return checks;
@@ -63,7 +64,7 @@ namespace GoodPractices_Controller
         public String DeleteCourse(String nameCourse)
         {
             var course = context.Courses.Where(c => c.Name == nameCourse);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "course", nameCourse } });
+            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "course", nameCourse } });
             if (checks != "success")
             {
                 return checks;
@@ -91,7 +92,7 @@ namespace GoodPractices_Controller
         {
             var course = context.Courses.Include(c => c.Students).Where(c => c.Name == courseName);
             var student = context.Students.Where(s => s.Document == studentDocument);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", studentDocument }, { "course", courseName } });
+            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument }, { "course", courseName } });
             if (checks != "success")
             {
                 return checks;
@@ -129,7 +130,7 @@ namespace GoodPractices_Controller
             {
                 var course = context.Courses.Include(c => c.Subjects).Where(c => c.Name == courseName);
                 var subject = context.Subjects.Where(s => s.Name == subjectName);
-                String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "subject", subjectName }, { "course", courseName } });
+                String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "subject", subjectName }, { "course", courseName } });
                 if (checks != "success")
                 {
                     return checks;
@@ -197,7 +198,7 @@ namespace GoodPractices_Controller
         {
             var student = context.Students.Where(s => s.Document == headmanDocument);
             var course = context.Courses.Include(t => t.Students).Where(c => c.Name == courseName);
-            String checks = generalFunctions.checkExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "course", courseName } });
+            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "course", courseName } });
             if (checks != "success")
             {
                 return checks;
