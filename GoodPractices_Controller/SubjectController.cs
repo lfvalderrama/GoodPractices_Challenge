@@ -10,28 +10,28 @@ namespace GoodPractices_Controller
     public class SubjectController
     {
         private SchoolDBContext context;
-        private GeneralFunctions generalFunctions;
+        private Validation generalFunctions;
 
         public SubjectController(SchoolDBContext context)
         {
             this.context = context;
-            this.generalFunctions = new GeneralFunctions(context);
+            this.generalFunctions = new Validation(context);
         }
 
 
         #region CreateSubject
         public String CreateSubject(string name, string content)
         {
-            if (!context.Subjects.Where(s => s.Name == name).Any())
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "noSubject", name } });
+            if (checks != "success")
             {
+                return checks;
+            }
+            else { 
                 Subject subject = new Subject(name, content);
                 context.Subjects.Add(subject);
                 context.SaveChanges();
                 return $"The subject {name} was created satisfactorily";
-            }
-            else
-            {
-                return $"The subject named {name} already exists.";
             }
         }
         #endregion
@@ -82,14 +82,15 @@ namespace GoodPractices_Controller
         #endregion
 
         #region GetSubjects
-        public void GetSubjects()
+        public List<string> GetSubjects()
         {
+            List<string> subjectList = new List<string>();
             var subjects = context.Subjects;
-            Console.WriteLine("......SUBJECTS......");
             foreach (var subject in subjects)
             {
-                Console.WriteLine($"{subject.Name}");
+                subjectList.Add($"{subject.Name}");
             }
+            return subjectList;
         }
         #endregion
     }

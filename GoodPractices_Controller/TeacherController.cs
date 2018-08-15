@@ -11,28 +11,30 @@ namespace GoodPractices_Controller
     public class TeacherController
     {
         private SchoolDBContext context;
-        private GeneralFunctions generalFunctions;
+        private Validation generalFunctions;
 
         public TeacherController(SchoolDBContext context)
         {
             this.context = context;
-            this.generalFunctions = new GeneralFunctions(context);
+            this.generalFunctions = new Validation(context);
         }
 
         #region CreateTeacher
         public String CreateTeacher(string document, string name, int age)
         {
-            if (!context.Teachers.Where(t => t.Document == document).Any())
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "noTeacher", document } });
+            if (checks != "success")
             {
+                return checks;
+            }
+            else
+            { 
                 Teacher teacher = new Teacher(name, document,age);
                 context.Teachers.Add(teacher);
                 context.SaveChanges();
                 return $"The teacher {name} was created satisfactorily";
             }
-            else
-            {
-                return $"The teacher with the document {document} already exists";
-            }
+            
         }
         #endregion
 
@@ -60,29 +62,6 @@ namespace GoodPractices_Controller
                 }
 
             }
-        }
-        #endregion
-
-        #region AddSubjectToTeacher
-        public String AddSubjectToTeacher(String subjectName, String teacherDocument)
-        {
-            var subject = context.Subjects.Include(s => s.Teachers).Where(s => s.Name == subjectName);
-            var teacher = context.Teachers.Where(t => t.Document == teacherDocument);
-            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } , { "subject", subjectName} });
-            if (checks != "success")
-            {
-                return checks;
-            }
-                if (!subject.First().Teachers.Contains(teacher.First()))
-                {                        
-                    subject.First().Teachers.Add(teacher.First());
-                    context.SaveChanges();
-                    return $"The subject {subjectName} was assigned to the teacher identified by {teacherDocument} satisfactorily";
-                }
-                else
-                {
-                    return $"The teacher identified by {teacherDocument} already has the subject {subjectName}";
-                }
         }
         #endregion
 
@@ -129,10 +108,9 @@ namespace GoodPractices_Controller
         #endregion
 
         #region GradesByStudent
-        private void GradesByStudent(Student student, Subject subject)
+        private GradeReport GradesByStudent(Student student, Subject subject)
         {
-            Console.WriteLine($"\nStudent {student.Name}");
-            Console.WriteLine($"-------------------------");
+            GradeReport gradeReport = new GradeReport() { Name = student.Name };
             var gradesByPeriod = student.Grades.Where(g => g.Subject == subject).GroupBy(p => p.Period, (key, p) => new { Period = key, Grades = p.ToList() });
             foreach (var grades in gradesByPeriod)
             {
@@ -143,6 +121,7 @@ namespace GoodPractices_Controller
                     Console.WriteLine($"{grade.Type}..........{grade.Score}");
                 }
             }
+            return null;
         }
         #endregion
     }

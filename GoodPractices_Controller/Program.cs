@@ -17,19 +17,20 @@ namespace GoodPractices_Controller
 
             // Usually you're only interested in exposing the type
             // via its interface:
-            builder.RegisterType<GeneralFunctions>().As<IGeneralFunctions>();
+            builder.RegisterType<Validation>().As<IValidation>();
             Container = builder.Build();
 
             using (var scope = Container.BeginLifetimeScope())
             {
-                var generalFunctions = scope.Resolve<IGeneralFunctions>();
+                //var generalFunctions = scope.Resolve<IValidation>();
 
 
                 StudentController student_controller = new StudentController(new SchoolDBContext());
                 SubjectController subject_controller = new SubjectController(new SchoolDBContext());
-                CourseController course_controller = new CourseController(new SchoolDBContext(), generalFunctions);
+                CourseController course_controller = new CourseController(new SchoolDBContext());
                 TeacherController teacherController = new TeacherController(new SchoolDBContext());
                 GradeController gradeController = new GradeController(new SchoolDBContext());
+                AdministratorController administratorController = new AdministratorController(new SchoolDBContext());
 
                 string option = "100";
 
@@ -222,7 +223,7 @@ namespace GoodPractices_Controller
                             teacherDocument = Console.ReadLine();
                             Console.WriteLine("Subject name");
                             subjectName = Console.ReadLine();
-                            Console.WriteLine(teacherController.AddSubjectToTeacher(subjectName, teacherDocument));
+                            Console.WriteLine(administratorController.AddSubjectToTeacher(subjectName, teacherDocument));
                             Console.WriteLine("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -232,7 +233,7 @@ namespace GoodPractices_Controller
                             studentDocument = Console.ReadLine();
                             Console.WriteLine("Course name");
                             courseName = Console.ReadLine();
-                            Console.WriteLine(course_controller.AddStudentToCourse(studentDocument, courseName));
+                            Console.WriteLine(administratorController.AddStudentToCourse(studentDocument, courseName));
                             Console.WriteLine("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -252,7 +253,7 @@ namespace GoodPractices_Controller
                             subjectName = Console.ReadLine();
                             Console.WriteLine("Course Name:");
                             courseName = Console.ReadLine();
-                            Console.WriteLine(course_controller.AddSubjectToCourse(subjectName, courseName));
+                            Console.WriteLine(administratorController.AddSubjectToCourse(subjectName, courseName));
                             Console.WriteLine("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -267,3 +268,6 @@ namespace GoodPractices_Controller
         }
     }
 }
+
+
+//TODO print Class

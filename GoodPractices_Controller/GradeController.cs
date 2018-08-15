@@ -11,12 +11,12 @@ namespace GoodPractices_Controller
     public class GradeController
     {
         private SchoolDBContext context;
-        private GeneralFunctions generalFunctions;
+        private Validation generalFunctions;
 
         public GradeController(SchoolDBContext context)
         {
             this.context = context;
-            this.generalFunctions = new GeneralFunctions(context);
+            this.generalFunctions = new Validation(context);
         }
 
         #region AddPartialGradeToStudent

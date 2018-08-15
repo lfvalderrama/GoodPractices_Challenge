@@ -52,6 +52,7 @@
     <Compile Include="Course.cs" />
     <Compile Include="ForeignLanguage.cs" />
     <Compile Include="Grade.cs" />
+    <Compile Include="GradeReport.cs" />
     <Compile Include="GradeType.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Migrations\201808011929231_CreateClasses.cs" />

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace GoodPractices_Controller
 {
-    class GeneralFunctions : IGeneralFunctions
+    class Validation : IValidation
     {
         private SchoolDBContext context;
 
-        public GeneralFunctions(SchoolDBContext context)
+        public Validation(SchoolDBContext context)
         {
             this.context = context;
         }
@@ -39,6 +39,22 @@ namespace GoodPractices_Controller
                 if (pair.Key == "foreignLanguage" && !context.ForeignLanguages.Where(s => s.Name == pair.Value).Any())
                 {
                     return $"The ForeignLanguage named {pair.Value} doesn't exists";
+                }
+                if (pair.Key == "noCourse" && context.Courses.Where(s => s.Name == pair.Value).Any())
+                {
+                    return $"The Course named {pair.Value} already exists";
+                }
+                if (pair.Key == "noStudent" && context.Students.Where(s => s.Document == pair.Value).Any())
+                {
+                    return $"The student identified by {pair.Value} already exists";
+                }
+                if (pair.Key == "noSubject" && context.Subjects.Where(s => s.Name == pair.Value).Any())
+                {
+                    return $"The Subject named {pair.Value} already exists";
+                }
+                if (pair.Key == "noTeacher" && context.Teachers.Where(s => s.Document == pair.Value).Any())
+                {
+                    return $"The Teacher identified by {pair.Value} already exists";
                 }
             }
             return "success";

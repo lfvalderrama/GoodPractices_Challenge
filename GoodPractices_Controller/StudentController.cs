@@ -10,18 +10,19 @@ namespace GoodPractices_Controller
     public class StudentController
     {
         private SchoolDBContext context;
-        private GeneralFunctions generalFunctions;
+        private Validation generalFunctions;
 
         public StudentController(SchoolDBContext context)
         {
             this.context = context;
-            this.generalFunctions = new GeneralFunctions(context);
+            this.generalFunctions = new Validation(context);
         }
 
         #region CreateStudent
         public String CreateStudent(string document, string name, int age)
-        {          
-            if (!context.Students.Where(x => x.Document == document).Any())
+        {
+            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "noStudent", document } });
+            if (checks == "success")
             {
                 Student student = new Student(document, name, age);
                 context.Students.Add(student);
@@ -30,7 +31,7 @@ namespace GoodPractices_Controller
             }
             else
             {
-                return ($"The student identified with {document} already exists.");
+                return checks;
             }
         }
         #endregion
@@ -79,35 +80,42 @@ namespace GoodPractices_Controller
         #endregion
 
         #region GetGradesByPeriod
-        public void GetGradesByPeriod(String studentDocument)
+        public GradeReport GetGradesByPeriod(String studentDocument)
         {
+            GradeReport gradeReport = new GradeReport();
             var student = context.Students.Include(s => s.Grades).Include(g => g.Grades.Select(s => s.Subject)).Where(s => s.Document == studentDocument);
             String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
             if (checks != "success")
             {
-                Console.WriteLine(checks);
+                gradeReport.Error = checks;
             }
             else
             {
-                Console.WriteLine($"Grades of the student {student.First().Name}");
+                gradeReport.Name = student.First().Name;
                 var grades = student.First().Grades.GroupBy(g => g.Period, (key, g) => new { Period = key, Grades = g.ToList() });
+                Dictionary<string, List<GradesBySubject>> studentGrades = new Dictionary<string, List<GradesBySubject>>();
                 foreach (var period in grades)
                 {
-                    Console.WriteLine($"\nPeriod {period.Period}");
-                    Console.WriteLine(".......................");
+                    studentGrades[period.Period] = new List<GradesBySubject>();
                     var gradePerSubject = period.Grades.GroupBy(g => g.Subject, (key, g) => new { Subject = key, Grades = g.ToList() });
                     foreach (var subject in gradePerSubject)
                     {
-                        Console.WriteLine($"\nSubject {subject.Subject.Name}");
-                        Console.WriteLine("........................");
-                        Console.WriteLine($"Type...........Score");
+                        GradesBySubject gradesBySubject = new GradesBySubject
+                        {
+                            subjectName = subject.Subject.Name
+                        };
+                        List<Grade> scoreList = new List<Grade>();
                         foreach (var grade in subject.Grades)
                         {
-                            Console.WriteLine($"{grade.Type}.........{grade.Score}");
+                            scoreList.Add(grade);
                         }
+                        gradesBySubject.grades = scoreList;
+                        studentGrades[period.Period].Add(gradesBySubject);
                     }
                 }
+                gradeReport.Grades = studentGrades;
             }
+            return gradeReport;
         }
         #endregion
     }
