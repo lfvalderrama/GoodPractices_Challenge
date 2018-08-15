@@ -15,7 +15,7 @@ namespace GoodPractices_Test
     {
         private List<Course> dataCourse = new List<Course>
             {
-                new Course { Name = "BBB", Headman = new Student{Document = "1234567" } }
+                new Course { Name = "3B", Headman = new Student{Document = "1234567" } }
             };
 
         private List<Student> dataStudent = new List<Student>
@@ -25,9 +25,10 @@ namespace GoodPractices_Test
 
         private List<Teacher> dataTeacher = new List<Teacher>
             {
-                new Teacher { Name = "BBB", Document = "456789", Course = new Course { Name = "4A" } }
+                new Teacher { Name = "BBB", Document = "456789", Course = null },
+                new Teacher { Name = "BBB", Document = "456789", Course = new Course{Name = "3B" } }
             };
-        /*
+        
         [TestMethod]
         public void CreateCourse_saves_a_course()
         {
@@ -51,33 +52,29 @@ namespace GoodPractices_Test
             mockSetCourse.Verify(m => m.Add(It.IsAny<Course>()), Times.Once());
             mockContext.Verify(m => m.SaveChanges(), Times.Once());
         }
-        /*
+        
         [TestMethod]
-        public void CreateStudent_dont_saves_a_existing_student()
+        public void CreateCourse_dont_saves_a_Existing_course()
         {
             //Given
-            var data = new List<Student>
-            {
-                new Student { Name = "BBB", Document = "12341564" }
-            }.AsQueryable();
-
-            var mockSet = new Mock<DbSet<Student>>();
-            mockSet.As<IQueryable<Student>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<Student>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<Student>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<Student>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+            var mockSetCourse = GeneralMock.GetQueryableMockDbSet(dataCourse);
+            var mockSetTeacher = GeneralMock.GetQueryableMockDbSet(dataTeacher);
+            var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
 
             var mockContext = new Mock<SchoolDBContext>();
-            mockContext.Setup(c => c.Students).Returns(mockSet.Object);
+            mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
+            mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
+            mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
 
-            var controller = new StudentController(mockContext.Object);
+
+            var controller = new CourseController(mockContext.Object);
 
             //When
-            controller.CreateStudent("12341564", "asdasd", 14);
+            controller.CreateCourse("3B", "12345", "456789");
 
             //then
-            mockSet.Verify(m => m.Add(It.IsAny<Student>()), Times.Never);
-            mockContext.Verify(m => m.SaveChanges(), Times.Never);
-        }*/
+            mockSetCourse.Verify(m => m.Add(It.IsAny<Course>()), Times.Never());
+            mockContext.Verify(m => m.SaveChanges(), Times.Never());
+        }
     }
 }
