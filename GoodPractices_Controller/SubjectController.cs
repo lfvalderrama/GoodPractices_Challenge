@@ -9,28 +9,28 @@ namespace GoodPractices_Controller
 {
     public class SubjectController
     {
-        private SchoolDBContext context;
-        private Validation generalFunctions;
+        private ISchoolDBContext _context;
+        private IValidation _validator;
 
-        public SubjectController(SchoolDBContext context)
+        public SubjectController(ISchoolDBContext context, IValidation validation)
         {
-            this.context = context;
-            this.generalFunctions = new Validation(context);
+            _context = context;
+            _validator = validation;
         }
 
 
         #region CreateSubject
         public String CreateSubject(string name, string content)
         {
-            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "noSubject", name } });
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "noSubject", name } });
             if (checks != "success")
             {
                 return checks;
             }
             else { 
                 Subject subject = new Subject(name, content);
-                context.Subjects.Add(subject);
-                context.SaveChanges();
+                _context.Subjects.Add(subject);
+                _context.SaveChanges();
                 return $"The subject {name} was created satisfactorily";
             }
         }
@@ -39,11 +39,11 @@ namespace GoodPractices_Controller
         #region CreateLanguage
         public String CreateLanguage(Language language, string name, string content)
         {
-            if (!context.ForeignLanguages.Where(s => s.Name == name).Any())
+            if (!_context.ForeignLanguages.Where(s => s.Name == name).Any())
             {
                 ForeignLanguage new_language = new ForeignLanguage(language, name, content);
-                context.ForeignLanguages.Add(new_language);
-                context.SaveChanges();
+                _context.ForeignLanguages.Add(new_language);
+                _context.SaveChanges();
                 return $"The subject {name} was created satisfactorily";
 
             }
@@ -57,8 +57,8 @@ namespace GoodPractices_Controller
         #region DeleteSubject
         public String DeleteSubject(String name)
         {
-            var subject = context.Subjects.Where(s => s.Name == name);
-            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "subject", name } });
+            var subject = _context.Subjects.Where(s => s.Name == name);
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "subject", name } });
             if (checks != "success")
             {
                 return checks;
@@ -67,10 +67,9 @@ namespace GoodPractices_Controller
             {
                 try
                 {
-                    context.Subjects.Remove(subject.First());
-                    context.SaveChanges();
+                    _context.Subjects.Remove(subject.First());
+                    _context.SaveChanges();
                     return $"The subject {name} was deleted satisfactorily";
-
                 }
                 catch (System.Data.Entity.Infrastructure.DbUpdateException)
                 {
@@ -85,7 +84,7 @@ namespace GoodPractices_Controller
         public List<string> GetSubjects()
         {
             List<string> subjectList = new List<string>();
-            var subjects = context.Subjects;
+            var subjects = _context.Subjects;
             foreach (var subject in subjects)
             {
                 subjectList.Add($"{subject.Name}");

@@ -1,31 +1,29 @@
-﻿using System;
+﻿using GoodPractices_Model;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoodPractices_Model;
 using System.Data.Entity;
+using System.Linq;
 
 namespace GoodPractices_Controller
 {
     public class GradeController
     {
-        private SchoolDBContext context;
-        private Validation generalFunctions;
+        private ISchoolDBContext _context;
+        private IValidation _validator;
 
-        public GradeController(SchoolDBContext context)
+        public GradeController(ISchoolDBContext context, IValidation validation)
         {
-            this.context = context;
-            this.generalFunctions = new Validation(context);
+            _context = context;
+            _validator = validation;
         }
 
         #region AddPartialGradeToStudent
         public String AddPartialGradeToStudent(string period, float score, String subjectName, GradeType type, String studentDocument)
         {
-            var student = context.Students.Include(s => s.Grades).Where(s => s.Document == studentDocument);
-            var subject = context.Subjects.Where(s => s.Name == subjectName);
+            var student = _context.Students.Include(s => s.Grades).Where(s => s.Document == studentDocument);
+            var subject = _context.Subjects.Where(s => s.Name == subjectName);
             var grades = student.First().Grades;
-            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument }, { "subject", subjectName } });
             if (checks != "success")
             {
                 return checks;
@@ -34,14 +32,14 @@ namespace GoodPractices_Controller
             {               
                 foreach (Grade grade in grades)
                 {
-                    if (grade.Period == period && grade.Subject == subject.First() && grade.Type == type)
+                    if (grade.Period == period && grade.Subject.Id == subject.First().Id && grade.Type == type)
                     {
                         return $"The subject {subjectName} already has a grade of that type for the period {period}";
                     }
                 }
                 Grade new_grade = new Grade(period, score, subject.First(), type);
                 student.First().Grades.Add(new_grade);
-                context.SaveChanges();
+                _context.SaveChanges();
                 return $"The Partial grade has been added satisfactorily to the student {student.First().Name}";                    
             }
             else
@@ -54,9 +52,9 @@ namespace GoodPractices_Controller
         #region CalculateFinalGradeToStudent
         public String CalculateFinalGradeToStudent(string period, String studentDocument)
         {
-            var student = context.Students.Include(s => s.Grades).Include(g=>g.Grades.Select(s=>s.Subject)).Where(s => s.Document == studentDocument);
+            var student = _context.Students.Include(s => s.Grades).Include(g=>g.Grades.Select(s=>s.Subject)).Where(s => s.Document == studentDocument);
             Dictionary<Subject, float> finalGrades = new Dictionary<Subject, float>();
-            String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
             if (checks != "success")
             {
                 return checks;
@@ -78,7 +76,7 @@ namespace GoodPractices_Controller
                     Grade new_grade = new Grade(period, finalGrades[subject.Subject], subject.Subject, GradeType.FINAL);
                     student.First().Grades.Add(new_grade);
                 }
-                context.SaveChanges();                    
+                _context.SaveChanges();                    
             }
             return $"All final grades of the student {student.First().Name} had been calculed satisfactorily";
         }

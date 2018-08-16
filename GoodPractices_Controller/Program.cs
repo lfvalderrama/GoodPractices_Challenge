@@ -11,27 +11,16 @@ namespace GoodPractices_Controller
 
         static void Main(string[] args)
         {
-
-            // Create your builder.
-            var builder = new ContainerBuilder();
-
-            // Usually you're only interested in exposing the type
-            // via its interface:
-            builder.RegisterType<Validation>().As<IValidation>();
-            builder.RegisterType<ConsolePrinter>().As<IPrinter>();
-            Container = builder.Build();
-
+            BindDependencies();
             using (var scope = Container.BeginLifetimeScope())
             {
-                //var generalFunctions = scope.Resolve<IValidation>();
-
                 var printer = scope.Resolve<IPrinter>();
-                StudentController studentController = new StudentController(new SchoolDBContext());
-                SubjectController subjectController = new SubjectController(new SchoolDBContext());
-                CourseController courseController = new CourseController(new SchoolDBContext());
-                TeacherController teacherController = new TeacherController(new SchoolDBContext());
-                GradeController gradeController = new GradeController(new SchoolDBContext());
-                AdministratorController administratorController = new AdministratorController(new SchoolDBContext());
+                var courseController = scope.Resolve<CourseController>();
+                var administratorController = scope.Resolve<AdministratorController>();
+                var gradeController = scope.Resolve<GradeController>();
+                var studentController = scope.Resolve<StudentController>();
+                var subjectController = scope.Resolve<SubjectController>();
+                var teacherController = scope.Resolve<TeacherController>();
 
                 string option = "100";
 
@@ -241,6 +230,21 @@ namespace GoodPractices_Controller
                     }
                 }
             }
+        }
+
+        private static void BindDependencies()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<Validation>().As<IValidation>();
+            builder.RegisterType<ConsolePrinter>().As<IPrinter>();
+            builder.RegisterType<SchoolDBContext>().As<ISchoolDBContext>();
+            builder.RegisterType<CourseController>();
+            builder.RegisterType<AdministratorController>();
+            builder.RegisterType<GradeController>();
+            builder.RegisterType<StudentController>();
+            builder.RegisterType<SubjectController>();
+            builder.RegisterType<TeacherController>();
+            Container = builder.Build();
         }
     }
 }

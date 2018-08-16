@@ -10,33 +10,33 @@ namespace GoodPractices_Controller
 {
     class AdministratorController
     {
-        private SchoolDBContext context;
-        private Validation _generalFunctions;
+        private ISchoolDBContext _context;
+        private IValidation _validator;
 
-        public AdministratorController(SchoolDBContext context)
+        public AdministratorController(ISchoolDBContext context, IValidation validation)
         {
-            this.context = context;
-            this._generalFunctions = new Validation(context);
+            this._context = context;
+            this._validator = validation;
         }
 
         #region AddStudentToCourse
         public string AddStudentToCourse(string studentDocument, string courseName)
         {
-            var course = context.Courses.Include(c => c.Students).Where(c => c.Name == courseName);
-            var student = context.Students.Where(s => s.Document == studentDocument);
-            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument }, { "course", courseName } });
+            var course = _context.Courses.Include(c => c.Students).Where(c => c.Name == courseName);
+            var student = _context.Students.Where(s => s.Document == studentDocument);
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument }, { "course", courseName } });
             if (checks != "success")
             {
                 return checks;
             }
-            if (!context.Courses.Where(c => c.Headman.Document == studentDocument).Any())
+            if (!_context.Courses.Where(c => c.Headman.Document == studentDocument).Any())
             {
                 if (!course.First().Students.Contains(student.First()))
                 {
                     if (course.First().Students.Count() < 30)
                     {
                         course.First().Students.Add(student.First());
-                        context.SaveChanges();
+                        _context.SaveChanges();
                         return $"The student identified by {studentDocument} was assigned to {courseName} satisfactorily";
                     }
                     else
@@ -51,7 +51,7 @@ namespace GoodPractices_Controller
             }
             else
             {
-                return $"The student identified by {studentDocument} is headman in {context.Courses.Where(c => c.Headman.Document == studentDocument).First().Name}";
+                return $"The student identified by {studentDocument} is headman in {_context.Courses.Where(c => c.Headman.Document == studentDocument).First().Name}";
             }
         }
         #endregion
@@ -60,9 +60,9 @@ namespace GoodPractices_Controller
         public String AddSubjectToCourse(String subjectName, String courseName)
         {
             {
-                var course = context.Courses.Include(c => c.Subjects).Where(c => c.Name == courseName);
-                var subject = context.Subjects.Where(s => s.Name == subjectName);
-                String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "subject", subjectName }, { "course", courseName } });
+                var course = _context.Courses.Include(c => c.Subjects).Where(c => c.Name == courseName);
+                var subject = _context.Subjects.Where(s => s.Name == subjectName);
+                String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "subject", subjectName }, { "course", courseName } });
                 if (checks != "success")
                 {
                     return checks;
@@ -74,7 +74,7 @@ namespace GoodPractices_Controller
                 if (!course.First().Subjects.Contains(subject.First()))
                 {
                     course.First().Subjects.Add(subject.First());
-                    context.SaveChanges();
+                    _context.SaveChanges();
                     return $"The subject {subjectName} was assigned to {courseName} satisfactorily";
                 }
                 else
@@ -88,9 +88,9 @@ namespace GoodPractices_Controller
         #region AddSubjectToTeacher
         public String AddSubjectToTeacher(String subjectName, String teacherDocument)
         {
-            var subject = context.Subjects.Include(s => s.Teachers).Where(s => s.Name == subjectName);
-            var teacher = context.Teachers.Where(t => t.Document == teacherDocument);
-            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument }, { "subject", subjectName } });
+            var subject = _context.Subjects.Include(s => s.Teachers).Where(s => s.Name == subjectName);
+            var teacher = _context.Teachers.Where(t => t.Document == teacherDocument);
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument }, { "subject", subjectName } });
             if (checks != "success")
             {
                 return checks;
@@ -98,7 +98,7 @@ namespace GoodPractices_Controller
             if (!subject.First().Teachers.Contains(teacher.First()))
             {
                 subject.First().Teachers.Add(teacher.First());
-                context.SaveChanges();
+                _context.SaveChanges();
                 return $"The subject {subjectName} was assigned to the teacher identified by {teacherDocument} satisfactorily";
             }
             else
@@ -111,23 +111,23 @@ namespace GoodPractices_Controller
         #region ReasignHeadman
         public String ReasignHeadman(String courseName, String headmanDocument)
         {
-            var student = context.Students.Where(s => s.Document == headmanDocument);
-            var course = context.Courses.Include(t => t.Students).Where(c => c.Name == courseName);
-            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "course", courseName } });
+            var student = _context.Students.Where(s => s.Document == headmanDocument);
+            var course = _context.Courses.Include(t => t.Students).Where(c => c.Name == courseName);
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "course", courseName } });
             if (checks != "success")
             {
                 return checks;
             }
-            if (context.Courses.Where(c => c.Headman.Document == headmanDocument).Any())
+            if (_context.Courses.Where(c => c.Headman.Document == headmanDocument).Any())
             {
-                return $"The student identified by {headmanDocument} already has assigned as headman in the course {context.Courses.Where(c => c.Headman.Document == headmanDocument).First().Name}";
+                return $"The student identified by {headmanDocument} already has assigned as headman in the course {_context.Courses.Where(c => c.Headman.Document == headmanDocument).First().Name}";
             }
             else
             {
                 if (course.First().Students.Contains(student.First()))
                 {
                     course.First().Headman = student.First();
-                    context.SaveChanges();
+                    _context.SaveChanges();
                     return $"The headman of the coruse {courseName} was reasigned satisfactorily";
                 }
                 else

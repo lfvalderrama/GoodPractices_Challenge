@@ -35,10 +35,10 @@ namespace GoodPractices_Controller
                 Console.WriteLine($"Grades of the student {gradeReport.Name}");
                 foreach (var period in gradeReport.Grades)
                 {
-                    Console.WriteLine($"Period: {period.Key}:  ");
+                    Console.WriteLine($"\nPeriod: {period.Key}:  ");
                     foreach (var subject in period.Value)
                     {
-                        Console.WriteLine($"Subject: {subject.Identifier}");
+                        Console.WriteLine($"\nSubject: {subject.Identifier}");
                         foreach (var grade in subject.Grades)
                         {
                             Console.WriteLine($"Type:  {grade.Type}     Score:  {grade.Score}");
@@ -59,13 +59,13 @@ namespace GoodPractices_Controller
                 Console.WriteLine($"Grades of the students that take class with the teacher {gradesByTeacher.TeacherName}");
                 foreach (var subject in gradesByTeacher.GradesBySubject)
                 {
-                    Console.WriteLine($"Subject: {subject.Key}:  ");
+                    Console.WriteLine($"\nSubject: {subject.Key}:  ");
                     foreach (var student in subject.Value)
                     {
-                        Console.WriteLine($"Student: {student.Name}");
+                        Console.WriteLine($"\nStudent: {student.Name}");
                         foreach (var period in student.Grades)
                         {
-                            Console.WriteLine($"Period: {period.Identifier}");
+                            Console.WriteLine($"\nPeriod: {period.Identifier}");
                             foreach (var grade in period.Grades)
                             {
                                 Console.WriteLine($"Type:  {grade.Type}     Score:  {grade.Score}");
