@@ -18,7 +18,7 @@ namespace GoodPractices_Controller
             // Usually you're only interested in exposing the type
             // via its interface:
             builder.RegisterType<Validation>().As<IValidation>();
-            builder.RegisterType<Printer>().As<IPrinter>();
+            builder.RegisterType<ConsolePrinter>().As<IPrinter>();
             Container = builder.Build();
 
             using (var scope = Container.BeginLifetimeScope())
@@ -26,9 +26,9 @@ namespace GoodPractices_Controller
                 //var generalFunctions = scope.Resolve<IValidation>();
 
                 var printer = scope.Resolve<IPrinter>();
-                StudentController student_controller = new StudentController(new SchoolDBContext());
-                SubjectController subject_controller = new SubjectController(new SchoolDBContext());
-                CourseController course_controller = new CourseController(new SchoolDBContext());
+                StudentController studentController = new StudentController(new SchoolDBContext());
+                SubjectController subjectController = new SubjectController(new SchoolDBContext());
+                CourseController courseController = new CourseController(new SchoolDBContext());
                 TeacherController teacherController = new TeacherController(new SchoolDBContext());
                 GradeController gradeController = new GradeController(new SchoolDBContext());
                 AdministratorController administratorController = new AdministratorController(new SchoolDBContext());
@@ -52,7 +52,7 @@ namespace GoodPractices_Controller
                             string name = Console.ReadLine();
                             printer.PrintMessage("Age:");
                             int age = Convert.ToInt32(Console.ReadLine());
-                            printer.PrintMessage(student_controller.CreateStudent(document, name, age));
+                            printer.PrintMessage(studentController.CreateStudent(document, name, age));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -74,7 +74,7 @@ namespace GoodPractices_Controller
                             name = Console.ReadLine();
                             printer.PrintMessage("Content:");
                             string content = Console.ReadLine();
-                            printer.PrintMessage(subject_controller.CreateSubject(name, content));
+                            printer.PrintMessage(subjectController.CreateSubject(name, content));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -90,7 +90,7 @@ namespace GoodPractices_Controller
                                               "PORTUGUESE = 3\n" +
                                               "FRENCH = 4");
                             int language = Convert.ToInt32(Console.ReadLine());
-                            printer.PrintMessage(subject_controller.CreateLanguage((Language) (language), name, content));
+                            printer.PrintMessage(subjectController.CreateLanguage((Language) (language), name, content));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -102,7 +102,7 @@ namespace GoodPractices_Controller
                             string headmanDocument = Console.ReadLine();
                             printer.PrintMessage("Teacher Document:");
                             string teacherDocument = Console.ReadLine();
-                            printer.PrintMessage(course_controller.CreateCourse(name, headmanDocument, teacherDocument));
+                            printer.PrintMessage(courseController.CreateCourse(name, headmanDocument, teacherDocument));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -112,7 +112,7 @@ namespace GoodPractices_Controller
                             string courseName = Console.ReadLine();
                             printer.PrintMessage("Headman Document:");
                             headmanDocument = Console.ReadLine();
-                            printer.PrintMessage(course_controller.ReasignHeadman(courseName, headmanDocument));
+                            printer.PrintMessage(administratorController.ReasignHeadman(courseName, headmanDocument));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -148,20 +148,20 @@ namespace GoodPractices_Controller
                             break;
                         case "9":
                             printer.PrintMessage("9. List all courses.\n\nCOURSES:");
-                            printer.PrintList(course_controller.GetCourses());
+                            printer.PrintList(courseController.GetCourses());
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
                         case "10":
                             printer.PrintMessage("10. List all subjects.\n\nSUBJECTS:");
-                            printer.PrintList(subject_controller.GetSubjects());
+                            printer.PrintList(subjectController.GetSubjects());
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
                         case "11":
                             printer.PrintMessage("11. List all courses with its subjects.\n\nCOURSES" );
                             printer.PrintSubjectsOfCourses
-                                (course_controller.GetSUbjectsByCourse());
+                                (courseController.GetSUbjectsByCourse());
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -175,13 +175,13 @@ namespace GoodPractices_Controller
                         case "13":
                             printer.PrintMessage("13. List Grades of a student.\n\n Student Document: ");
                             string studentDocument = Console.ReadLine();
-                            printer.PrintGradesByStudent(student_controller.GetGradesByPeriod(studentDocument));
+                            printer.PrintGradesByStudent(studentController.GetGradesByPeriod(studentDocument));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
                         case "14":
                             printer.PrintMessage("14. List all headmans.\n");
-                            printer.PrintList(course_controller.GetHeadmans());
+                            printer.PrintList(courseController.GetHeadmans());
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -189,7 +189,7 @@ namespace GoodPractices_Controller
                             printer.PrintMessage("15. Delete a student.\n");
                             printer.PrintMessage("Student Document:");
                             studentDocument = Console.ReadLine();
-                            printer.PrintMessage(student_controller.DeleteStudent(studentDocument));
+                            printer.PrintMessage(studentController.DeleteStudent(studentDocument));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -219,7 +219,7 @@ namespace GoodPractices_Controller
                             studentDocument = Console.ReadLine();
                             printer.PrintMessage("Foreign Language subject name:");
                             subjectName = Console.ReadLine();
-                            printer.PrintMessage(student_controller.AssignForeignLanguage(studentDocument, subjectName));
+                            printer.PrintMessage(studentController.AssignForeignLanguage(studentDocument, subjectName));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;

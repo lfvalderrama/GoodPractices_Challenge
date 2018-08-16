@@ -107,5 +107,35 @@ namespace GoodPractices_Controller
             }
         }
         #endregion
+
+        #region ReasignHeadman
+        public String ReasignHeadman(String courseName, String headmanDocument)
+        {
+            var student = context.Students.Where(s => s.Document == headmanDocument);
+            var course = context.Courses.Include(t => t.Students).Where(c => c.Name == courseName);
+            String checks = _generalFunctions.CheckExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "course", courseName } });
+            if (checks != "success")
+            {
+                return checks;
+            }
+            if (context.Courses.Where(c => c.Headman.Document == headmanDocument).Any())
+            {
+                return $"The student identified by {headmanDocument} already has assigned as headman in the course {context.Courses.Where(c => c.Headman.Document == headmanDocument).First().Name}";
+            }
+            else
+            {
+                if (course.First().Students.Contains(student.First()))
+                {
+                    course.First().Headman = student.First();
+                    context.SaveChanges();
+                    return $"The headman of the coruse {courseName} was reasigned satisfactorily";
+                }
+                else
+                {
+                    return $"The student identified by {headmanDocument} is not in the course {courseName}";
+                }
+            }
+        }
+        #endregion
     }
 }

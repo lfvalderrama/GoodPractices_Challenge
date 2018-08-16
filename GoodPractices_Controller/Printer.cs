@@ -17,7 +17,7 @@ namespace GoodPractices_Controller
         void PrintMenu();
     }
 
-    public class Printer : IPrinter
+    public class ConsolePrinter : IPrinter
     {
         public void PrintMessage(string message)
         {
