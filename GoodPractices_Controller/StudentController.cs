@@ -40,7 +40,7 @@ namespace GoodPractices_Controller
         public String DeleteStudent(String studentDocument)
         {
             var student = _context.Students.Where(x => x.Document == studentDocument);
-            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument } });            
             if (checks != "success")
             {
                 return checks;

@@ -32,7 +32,7 @@ namespace GoodPractices_Controller
             {               
                 foreach (Grade grade in grades)
                 {
-                    if (grade.Period == period && grade.Subject.Id == subject.First().Id && grade.Type == type)
+                    if (grade.Period == period && grade.Subject == subject.First() && grade.Type == type)
                     {
                         return $"The subject {subjectName} already has a grade of that type for the period {period}";
                     }
