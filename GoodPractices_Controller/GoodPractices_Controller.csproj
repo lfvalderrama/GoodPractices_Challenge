@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdministratorController.cs" />
+    <Compile Include="Printer.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="CourseController.cs" />
     <Compile Include="GradeController.cs" />

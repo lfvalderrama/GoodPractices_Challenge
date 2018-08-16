@@ -66,28 +66,26 @@ namespace GoodPractices_Controller
         #endregion
 
         #region GetGradesOfStudentsByTeacher
-        public void GetGradesOfStudentsByTeacher(string teacherDocument)
+        public GradesByTeacher GetGradesOfStudentsByTeacher(string teacherDocument)
         {
             var teacher = context.Teachers.Include(t => t.Subjects).Where(t => t.Document == teacherDocument);
             String checks = generalFunctions.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
             if (checks != "success")
             {
-                Console.WriteLine(checks);
+                return new GradesByTeacher { Error = checks };
             }
             else
             {
-                Console.WriteLine($"Grades of the students of the subjects of the teacher {teacher.First().Name}");
+                GradesByTeacher gradesByTeacher = new GradesByTeacher { TeacherName = teacher.First().Name, GradesBySubject = new Dictionary<string, List<GradeByStudent>>() };
                 foreach (var subject in teacher.First().Subjects)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine($"Grades of the subject {subject.Name}");
-                    Console.WriteLine("#####################################");
+                    gradesByTeacher.GradesBySubject[subject.Name] = new List<GradeByStudent>();
                     if (subject.GetType() == typeof(ForeignLanguage))
                     {
                         var students = context.Students.Include(s => s.Grades).Where(s => s.ForeignLanguaje.Name == subject.Name);
                         foreach (var student in students)
                         {
-                            GradesByStudent(student, subject);
+                           gradesByTeacher.GradesBySubject[subject.Name].Add(new GradeByStudent { Name = student.Name, Grades =GradesByStudent(student, subject)});
                         }
                     }
                     else
@@ -98,30 +96,31 @@ namespace GoodPractices_Controller
                             var students = course.Students;
                             foreach (var student in students)
                             {
-                                GradesByStudent(student, subject);
+                                gradesByTeacher.GradesBySubject[subject.Name].Add(new GradeByStudent { Name = student.Name, Grades = GradesByStudent(student, subject) });
                             }
                         }
                     }
                 }
+                return gradesByTeacher;
             }
         }
         #endregion
 
         #region GradesByStudent
-        private GradeReport GradesByStudent(Student student, Subject subject)
+        private List<GradesBy_> GradesByStudent(Student student, Subject subject)
         {
-            GradeReport gradeReport = new GradeReport() { Name = student.Name };
+            List<GradesBy_> gradesBy_ = new List<GradesBy_>();
             var gradesByPeriod = student.Grades.Where(g => g.Subject == subject).GroupBy(p => p.Period, (key, p) => new { Period = key, Grades = p.ToList() });
             foreach (var grades in gradesByPeriod)
             {
-                Console.WriteLine($"Period {grades.Period}");
-                Console.WriteLine("Type...........Score");
+                var gradesOfPeriod = new GradesBy_ { Identifier = grades.Period, Grades = new List<Grade>() };
                 foreach (var grade in grades.Grades)
                 {
-                    Console.WriteLine($"{grade.Type}..........{grade.Score}");
+                    gradesOfPeriod.Grades.Add(grade);
                 }
+                gradesBy_.Add(gradesOfPeriod);
             }
-            return null;
+            return gradesBy_;
         }
         #endregion
     }

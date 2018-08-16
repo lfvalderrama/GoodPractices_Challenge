@@ -93,23 +93,23 @@ namespace GoodPractices_Controller
             {
                 gradeReport.Name = student.First().Name;
                 var grades = student.First().Grades.GroupBy(g => g.Period, (key, g) => new { Period = key, Grades = g.ToList() });
-                Dictionary<string, List<GradesBySubject>> studentGrades = new Dictionary<string, List<GradesBySubject>>();
+                Dictionary<string, List<GradesBy_>> studentGrades = new Dictionary<string, List<GradesBy_>>();
                 foreach (var period in grades)
                 {
-                    studentGrades[period.Period] = new List<GradesBySubject>();
+                    studentGrades[period.Period] = new List<GradesBy_>();
                     var gradePerSubject = period.Grades.GroupBy(g => g.Subject, (key, g) => new { Subject = key, Grades = g.ToList() });
                     foreach (var subject in gradePerSubject)
                     {
-                        GradesBySubject gradesBySubject = new GradesBySubject
+                        GradesBy_ gradesBySubject = new GradesBy_
                         {
-                            subjectName = subject.Subject.Name
+                            Identifier = subject.Subject.Name
                         };
                         List<Grade> scoreList = new List<Grade>();
                         foreach (var grade in subject.Grades)
                         {
                             scoreList.Add(grade);
                         }
-                        gradesBySubject.grades = scoreList;
+                        gradesBySubject.Grades = scoreList;
                         studentGrades[period.Period].Add(gradesBySubject);
                     }
                 }
