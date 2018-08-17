@@ -1,10 +1,8 @@
-﻿using System;
+﻿using GoodPractices_Model;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoodPractices_Model;
 using System.Data.Entity;
+using System.Linq;
 
 namespace GoodPractices_Controller
 {

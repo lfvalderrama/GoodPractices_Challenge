@@ -9,7 +9,6 @@ namespace GoodPractices_Test
     [TestClass]
     public class StudentControllerTest
     {
-
         private readonly List<Grade> dataGrade = new List<Grade>
         {
             new Grade {Subject = new Subject { Name = "Math 1" }, Period = "2018-1", Score = 4.2f, Type = GradeType.PARTIAL1 }
@@ -166,7 +165,16 @@ namespace GoodPractices_Test
             var result = _studentController.GetGradesByPeriod(dataStudent[0].Document);
 
             //then
-            var expected = new GradeReport { Name = dataStudent[0].Name, Grades = new Dictionary<string, List<GradesBy_>> { { "2018-1", new List<GradesBy_> { new GradesBy_ { Identifier = "Math 1", Grades = new List<Grade> { dataGrade[0] } } } } } };
+            var expected = new GradeReport {
+                Name = dataStudent[0].Name, Grades = new Dictionary<string, List<GradesBy_>> {
+                    { "2018-1", new List<GradesBy_> {
+                        new GradesBy_ {
+                            Identifier = "Math 1", Grades = new List<Grade> { dataGrade[0] }
+                        }
+                    }
+                    }
+                }
+            };
             Assert.AreEqual(expected.Name, result.Name);
             Assert.AreEqual(expected.Grades.Count, result.Grades.Count);
         }
