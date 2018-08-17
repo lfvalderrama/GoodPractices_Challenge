@@ -1,111 +1,163 @@
-﻿//using System;
-//using System.Text;
-//using System.Collections.Generic;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using System.Data.Entity;
-//using System.Linq;
-//using GoodPractices_Controller;
-//using GoodPractices_Model;
-//using Moq;
+﻿using GoodPractices_Controller;
+using GoodPractices_Model;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System.Collections.Generic;
 
-//namespace GoodPractices_Test
-//{
-//    [TestClass]
-//    public class SubjectControllerTest
-//    {
+namespace GoodPractices_Test
+{
+    [TestClass]
+    public class SubjectsControllerTest
+    {             
+        private readonly List<ForeignLanguage> dataLanguage = new List<ForeignLanguage>
+        {
+                new ForeignLanguage { Name = "French 1"}
+        };
 
-//        private List<Subject> dataSubject = new List<Subject>
-//            {
-//                new Subject { Name = "Math 1", Content = "asdasdasd" }
-//            };
+        private readonly List<Subject> dataSubject = new List<Subject>
+        {
+                new ForeignLanguage { Name = "Math 1"}
+        };
 
-//        private List<ForeignLanguage> dataLanguage = new List<ForeignLanguage>
-//            {
-//                new ForeignLanguage { Name = "English 1", Content = "asdasdasd", Language = Language.ENGLISH }
-//            };
+        private readonly string _noExistingSubject = "Math 2";
+        private readonly string _noExistingLanguage = "French 2";
 
-//        #region CreateSubject_saves_a_subject
-//        [TestMethod]
-//        public void CreateSubject_saves_a_subject()
-//        {
-//            //Given
-//            var mockSet = GeneralMock.GetQueryableMockDbSet(dataSubject);
+        private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
+        private Mock<IValidation> _validator = new Mock<IValidation>();
+        private SubjectController _subjectController;
 
-//            var mockContext = new Mock<SchoolDBContext>();
-//            mockContext.Setup(c => c.Subjects).Returns(mockSet.Object);
+        #region CreateSubject_saves_a_subject
+        [TestMethod]
+        public void CreateSubject_saves_a_subject()
+        {
+            //Given
+            var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
+            _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noSubject", _noExistingSubject } })).Returns("success");
+            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            //When
+            var result = _subjectController.CreateSubject(_noExistingSubject, "test");
 
-//            var controller = new SubjectController(mockContext.Object);
+            //then
+            mockSetSubject.Verify(m => m.Add(It.IsAny<Subject>()), Times.Once());
+            _mockContext.Verify(m => m.SaveChanges(), Times.Once());
+            Assert.AreEqual($"The subject {_noExistingSubject} was created satisfactorily",result);
+        }
+        #endregion
 
-//            //When
-//            controller.CreateSubject("Philosophy", "asdasd");
+        #region CreateSubject_dont_save_a_existing_subject
+        [TestMethod]
+        public void CreateStudent_dont_save_a_existing_student()
+        {
+            //Given
+            var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
+            _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noSubject", dataSubject[0].Name } })).Returns($"The Subject named {dataSubject[0].Name} already exists");
+            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            //When
+            var result = _subjectController.CreateSubject(dataSubject[0].Name, "test");
 
-//            //then
-//            mockSet.Verify(m => m.Add(It.IsAny<Subject>()), Times.Once());
-//            mockContext.Verify(m => m.SaveChanges(), Times.Once());
-//        }
-//        #endregion
+            //then
+            mockSetSubject.Verify(m => m.Add(It.IsAny<Subject>()), Times.Never());
+            _mockContext.Verify(m => m.SaveChanges(), Times.Never());
+            Assert.AreEqual($"The Subject named { dataSubject[0].Name} already exists", result);
+        }
+        #endregion
 
-//        #region CreateSubject_dont_saves_a_existing_subject
-//        [TestMethod]
-//        public void CreateSubject_dont_saves_a_existing_subject()
-//        {
-//            //Given
-//            var mockSet = GeneralMock.GetQueryableMockDbSet(dataSubject);
+        #region CreateForeignLanguage_saves_a_ForeignLanguage
+        [TestMethod]
+        public void CreateForeignLanguage_saves_a_ForeignLanguage()
+        {
+            //Given
+            var mockSetLanguage = GeneralMock.GetQueryableMockDbSet(dataLanguage);
+            _mockContext.Setup(c => c.ForeignLanguages).Returns(mockSetLanguage.Object);
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noForeignLanguage", _noExistingLanguage } })).Returns("success");
+            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            //When
+            var result = _subjectController.CreateLanguage(Language.FRENCH,_noExistingLanguage, "test");
 
-//            var mockContext = new Mock<SchoolDBContext>();
-//            mockContext.Setup(c => c.Subjects).Returns(mockSet.Object);
+            //then
+            mockSetLanguage.Verify(m => m.Add(It.IsAny<ForeignLanguage>()), Times.Once());
+            _mockContext.Verify(m => m.SaveChanges(), Times.Once());
+            Assert.AreEqual($"The subject {_noExistingLanguage} was created satisfactorily", result);
+        }
+        #endregion
 
-//            var controller = new SubjectController(mockContext.Object);
+        #region CreateForeignLanguage_dont_save_a_existing_ForeignLanguage
+        [TestMethod]
+        public void CreateForeignLanguage_dont_save_a_existing_ForeignLanguage()
+        {
+            //Given
+            var mockSetLanguage = GeneralMock.GetQueryableMockDbSet(dataLanguage);
+            _mockContext.Setup(c => c.ForeignLanguages).Returns(mockSetLanguage.Object);
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noForeignLanguage", dataLanguage[0].Name } })).Returns($"The ForeignLanguage named {dataLanguage[0].Name} already exists");
+            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            //When
+            var result = _subjectController.CreateLanguage(Language.FRENCH, dataLanguage[0].Name, "test");
 
-//            //When
-//            controller.CreateSubject("Math 1", "asdasd");
+            //then
+            mockSetLanguage.Verify(m => m.Add(It.IsAny<ForeignLanguage>()), Times.Never());
+            _mockContext.Verify(m => m.SaveChanges(), Times.Never());
+            Assert.AreEqual($"The ForeignLanguage named {dataLanguage[0].Name} already exists",result);
+        }
+        #endregion
 
-//            //then
-//            mockSet.Verify(m => m.Add(It.IsAny<Subject>()), Times.Never);
-//            mockContext.Verify(m => m.SaveChanges(), Times.Never);
-//        }
-//        #endregion
+        #region DeleteSubject_deletes_a_subject
+        [TestMethod]
+        public void DeleteSubject_deletes_a_subject()
+        {
+            //Given
+            var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
+            _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", dataSubject[0].Name } })).Returns("success");
+            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            //When
+            var result = _subjectController.DeleteSubject(dataSubject[0].Name);
 
-//        #region CreateForeignLanguage_saves_a_ForeignLanguage
-//        [TestMethod]
-//        public void CreateForeignLanguage_saves_a_ForeignLanguage()
-//        {
-//            //Given
-//            var mockSet = GeneralMock.GetQueryableMockDbSet(dataLanguage);
+            //then
+            mockSetSubject.Verify(m => m.Remove(It.IsAny<Subject>()), Times.Once());
+            _mockContext.Verify(m => m.SaveChanges(), Times.Once());
+            Assert.AreEqual($"The subject {dataSubject[0].Name} was deleted satisfactorily",result);
+        }
+        #endregion
 
-//            var mockContext = new Mock<SchoolDBContext>();
-//            mockContext.Setup(c => c.ForeignLanguages).Returns(mockSet.Object);
+        #region DeleteSubject_dont_delete_a_not_existing_subject
+        [TestMethod]
+        public void DeleteSubject_dont_delete_a_not_existing_subject()
+        {
+            //Given
+            var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
+            _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", _noExistingSubject } })).Returns($"The Subject named {_noExistingSubject} doesn't exists");
+            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            //When
+            var result = _subjectController.DeleteSubject(_noExistingSubject);
 
-//            var controller = new SubjectController(mockContext.Object);
+            //then
+            _mockContext.Verify(m => m.SaveChanges(), Times.Never());
+            Assert.AreEqual($"The Subject named { _noExistingSubject} doesn't exists",result);
+        }
+        #endregion
 
-//            //When
-//            controller.CreateLanguage(Language.FRENCH,"French 1", "asdasd");
+        #region GetSubjects_gets_subjects
+        [TestMethod]
+        public void GetSubjects_gets_subjects()
+        {
+            //Given
+            var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
+            var mockSetLanguages = GeneralMock.GetQueryableMockDbSet(dataLanguage);
+            _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
+            _mockContext.Setup(c => c.ForeignLanguages).Returns(mockSetLanguages.Object);
+            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
 
-//            //then
-//            mockSet.Verify(m => m.Add(It.IsAny<ForeignLanguage>()), Times.Once());
-//            mockContext.Verify(m => m.SaveChanges(), Times.Once());
-//        }
-//        #endregion
+            //When
+            var result = _subjectController.GetSubjects();
 
-//        #region CreateForeignLanguage_dont_saves_a_existing_ForeignLanguage
-//        [TestMethod]
-//        public void CreateForeignLanguage_dont_saves_a_existing_ForeignLanguaget()
-//        {
-//            //Given
-//            var mockSet = GeneralMock.GetQueryableMockDbSet(dataLanguage);
+            //then
+            var expected = new List<string> { "Math 1" };
+            CollectionAssert.AreEqual(expected, result);
+        }
+        #endregion
 
-//            var mockContext = new Mock<SchoolDBContext>();
-//            mockContext.Setup(c => c.ForeignLanguages).Returns(mockSet.Object);
-
-//            var controller = new SubjectController(mockContext.Object);
-
-//            //When
-//            controller.CreateLanguage(Language.ENGLISH, "English 1", "asdasd");
-
-//            //then
-//            mockSet.Verify(m => m.Add(It.IsAny<ForeignLanguage>()), Times.Never);
-//            mockContext.Verify(m => m.SaveChanges(), Times.Never);
-//        }
-//        #endregion
-//    }
-//}
+    }
+}

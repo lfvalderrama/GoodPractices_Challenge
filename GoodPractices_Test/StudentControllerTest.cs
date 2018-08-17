@@ -24,8 +24,6 @@ namespace GoodPractices_Test
                 new ForeignLanguage { Name = "French 1"}
             };
 
-        private readonly List<Course> dataCourse = new List<Course>();
-
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
         private StudentController _studentController;
@@ -35,15 +33,15 @@ namespace GoodPractices_Test
         public void CreateStudent_saves_a_student()
         {
             //Given
-            var mockSet = GeneralMock.GetQueryableMockDbSet(dataStudent);            
-            _mockContext.Setup(c => c.Students).Returns(mockSet.Object);
+            var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);            
+            _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>(){ { "noStudent", "51684" } })).Returns("success");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
             //When
             var result = _studentController.CreateStudent("51684", "test", 14);
 
             //then
-            mockSet.Verify(m => m.Add(It.IsAny<Student>()), Times.Once());
+            mockSetStudent.Verify(m => m.Add(It.IsAny<Student>()), Times.Once());
             _mockContext.Verify(m => m.SaveChanges(), Times.Once());
             Assert.AreEqual(result, "The Student test was created satisfactorily");
         }
@@ -54,8 +52,8 @@ namespace GoodPractices_Test
         public void CreateStudent_dont_saves_a_existing_student()
         {
             //Given
-            var mockSet = GeneralMock.GetQueryableMockDbSet(dataStudent);
-            _mockContext.Setup(c => c.Students).Returns(mockSet.Object);
+            var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
+            _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noStudent", "51684" } })).Returns("The student identified by 51684 already exists");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
 
@@ -63,7 +61,7 @@ namespace GoodPractices_Test
             var result = _studentController.CreateStudent("51684", "asdasd", 14);
 
             //then
-            mockSet.Verify(m => m.Add(It.IsAny<Student>()), Times.Never);
+            mockSetStudent.Verify(m => m.Add(It.IsAny<Student>()), Times.Never);
             _mockContext.Verify(m => m.SaveChanges(), Times.Never);
             Assert.AreEqual(result, "The student identified by 51684 already exists");
         }
@@ -74,8 +72,8 @@ namespace GoodPractices_Test
         public void DeleteStudent_saves_change()
         {
             //Given
-            var mockSet = GeneralMock.GetQueryableMockDbSet(dataStudent);
-            _mockContext.Setup(c => c.Students).Returns(mockSet.Object);
+            var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
+            _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12341564" } })).Returns("success");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
 
@@ -83,7 +81,7 @@ namespace GoodPractices_Test
             var result = _studentController.DeleteStudent("12341564");
 
             //then
-            mockSet.Verify(m => m.Remove(It.IsAny<Student>()), Times.Once());
+            mockSetStudent.Verify(m => m.Remove(It.IsAny<Student>()), Times.Once());
             _mockContext.Verify(m => m.SaveChanges(), Times.Once());
             Assert.AreEqual(result, "The student identified with 12341564 was removed satisfactorily");
 
@@ -95,8 +93,8 @@ namespace GoodPractices_Test
         public void DeleteStudent_dont_saves_change()
         {
             //Given
-            var mockSet = GeneralMock.GetQueryableMockDbSet(dataStudent);
-            _mockContext.Setup(c => c.Students).Returns(mockSet.Object);
+            var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
+            _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12341564" } })).Returns("The student identified by 12341564 doesn't exists");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
 
@@ -104,7 +102,7 @@ namespace GoodPractices_Test
             var result = _studentController.DeleteStudent("12341564");
 
             //then
-            mockSet.Verify(m => m.Remove(It.IsAny<Student>()), Times.Never());
+            mockSetStudent.Verify(m => m.Remove(It.IsAny<Student>()), Times.Never());
             _mockContext.Verify(m => m.SaveChanges(), Times.Never());
             Assert.AreEqual(result, "The student identified by 12341564 doesn't exists");
         }

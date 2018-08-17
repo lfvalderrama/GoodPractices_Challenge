@@ -39,17 +39,17 @@ namespace GoodPractices_Controller
         #region CreateLanguage
         public String CreateLanguage(Language language, string name, string content)
         {
-            if (!_context.ForeignLanguages.Where(s => s.Name == name).Any())
+            String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "noForeignLanguage", name } });
+            if (checks != "success")
+            {
+                return checks;
+            }
+            else
             {
                 ForeignLanguage new_language = new ForeignLanguage(language, name, content);
                 _context.ForeignLanguages.Add(new_language);
                 _context.SaveChanges();
                 return $"The subject {name} was created satisfactorily";
-
-            }
-            else
-            {
-                return $"The subject named {name} already exists.";
             }
         }
         #endregion

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GoodPractices_Controller
 {
-    class Validation : IValidation
+    public class Validation : IValidation
     {
         private ISchoolDBContext _context;
 
@@ -55,6 +55,10 @@ namespace GoodPractices_Controller
                 if (pair.Key == "noTeacher" && _context.Teachers.Where(s => s.Document == pair.Value).Any())
                 {
                     return $"The Teacher identified by {pair.Value} already exists";
+                }
+                if (pair.Key == "noForeignLanguage" && _context.ForeignLanguages.Where(s => s.Name == pair.Value).Any())
+                {
+                    return $"The ForeignLanguage named {pair.Value} already exists";
                 }
             }
             return "success";
