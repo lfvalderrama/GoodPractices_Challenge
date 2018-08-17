@@ -24,6 +24,8 @@ namespace GoodPractices_Test
                 new ForeignLanguage { Name = "French 1"}
             };
 
+        private readonly string _noExistingStudent = "123456";
+
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
         private StudentController _studentController;
@@ -35,15 +37,15 @@ namespace GoodPractices_Test
             //Given
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);            
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>(){ { "noStudent", "51684" } })).Returns("success");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>(){ { "noStudent", _noExistingStudent } })).Returns("success");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
             //When
-            var result = _studentController.CreateStudent("51684", "test", 14);
+            var result = _studentController.CreateStudent(_noExistingStudent, "test", 14);
 
             //then
             mockSetStudent.Verify(m => m.Add(It.IsAny<Student>()), Times.Once());
             _mockContext.Verify(m => m.SaveChanges(), Times.Once());
-            Assert.AreEqual(result, "The Student test was created satisfactorily");
+            Assert.AreEqual("The Student test was created satisfactorily", result);
         }
         #endregion
 
@@ -54,16 +56,16 @@ namespace GoodPractices_Test
             //Given
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noStudent", "51684" } })).Returns("The student identified by 51684 already exists");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noStudent", dataStudent[0].Document } })).Returns($"The student identified by {dataStudent[0].Document} already exists");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
 
             //When
-            var result = _studentController.CreateStudent("51684", "asdasd", 14);
+            var result = _studentController.CreateStudent(dataStudent[0].Document, "asdasd", 14);
 
             //then
             mockSetStudent.Verify(m => m.Add(It.IsAny<Student>()), Times.Never);
             _mockContext.Verify(m => m.SaveChanges(), Times.Never);
-            Assert.AreEqual(result, "The student identified by 51684 already exists");
+            Assert.AreEqual($"The student identified by {dataStudent[0].Document} already exists",result);
         }
         #endregion
 
@@ -74,16 +76,16 @@ namespace GoodPractices_Test
             //Given
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12341564" } })).Returns("success");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document } })).Returns("success");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
 
             //When
-            var result = _studentController.DeleteStudent("12341564");
+            var result = _studentController.DeleteStudent(dataStudent[0].Document);
 
             //then
             mockSetStudent.Verify(m => m.Remove(It.IsAny<Student>()), Times.Once());
             _mockContext.Verify(m => m.SaveChanges(), Times.Once());
-            Assert.AreEqual(result, "The student identified with 12341564 was removed satisfactorily");
+            Assert.AreEqual($"The student identified with {dataStudent[0].Document} was removed satisfactorily", result);
 
         }
         #endregion
@@ -95,36 +97,36 @@ namespace GoodPractices_Test
             //Given
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12341564" } })).Returns("The student identified by 12341564 doesn't exists");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
 
             //When
-            var result = _studentController.DeleteStudent("12341564");
+            var result = _studentController.DeleteStudent(_noExistingStudent);
 
             //then
             mockSetStudent.Verify(m => m.Remove(It.IsAny<Student>()), Times.Never());
             _mockContext.Verify(m => m.SaveChanges(), Times.Never());
-            Assert.AreEqual(result, "The student identified by 12341564 doesn't exists");
+            Assert.AreEqual($"The student identified by {_noExistingStudent} doesn't exists",result);
         }
         #endregion
 
         #region AssignForeignLanguage_do_assign_the_language
         [TestMethod]
-        public void ssignForeignLanguage_do_assign_the_language()
+        public void AssignForeignLanguage_do_assign_the_language()
         {
             //Given
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
             var mockSetLanguage = GeneralMock.GetQueryableMockDbSet(dataLanguage);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(f => f.ForeignLanguages).Returns(mockSetLanguage.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12341564" }, { "foreignLanguage", "French 1" } })).Returns("success");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "foreignLanguage", dataLanguage[0].Name } })).Returns("success");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
             //When
-            var result = _studentController.AssignForeignLanguage("12341564", "French 1");
+            var result = _studentController.AssignForeignLanguage(dataStudent[0].Document, "French 1");
 
             //then
             _mockContext.Verify(m => m.SaveChanges(), Times.Once());
-            Assert.AreEqual(result, "The foreign language French 1 was assigned satisfactorily to the student identified by 12341564");
+            Assert.AreEqual($"The foreign language {dataLanguage[0].Name} was assigned satisfactorily to the student identified by {dataStudent[0].Document}",result);
         }
         #endregion
 
@@ -137,14 +139,14 @@ namespace GoodPractices_Test
             var mockSetLanguage = GeneralMock.GetQueryableMockDbSet(dataLanguage);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(f => f.ForeignLanguages).Returns(mockSetLanguage.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12564" }, { "foreignLanguage", "French 1" } })).Returns("The student identified by 12564 doesn't exists");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent }, { "foreignLanguage", "French 1" } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
             //When
-            var result = _studentController.AssignForeignLanguage("12564", "French 1");
+            var result = _studentController.AssignForeignLanguage(_noExistingStudent, "French 1");
 
             //then
             _mockContext.Verify(m => m.SaveChanges(), Times.Never());
-            Assert.AreEqual(result, "The student identified by 12564 doesn't exists");
+            Assert.AreEqual($"The student identified by {_noExistingStudent} doesn't exists", result);
         }
         #endregion
 
@@ -158,13 +160,13 @@ namespace GoodPractices_Test
             var mockSetGrade = GeneralMock.GetQueryableMockDbSet(dataGrade);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12341564" } })).Returns("success");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document } })).Returns("success");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
             //When
-            var result = _studentController.GetGradesByPeriod("12341564");
+            var result = _studentController.GetGradesByPeriod(dataStudent[0].Document);
 
             //then
-            var expected = new GradeReport { Name = "BBB", Grades = new Dictionary<string, List<GradesBy_>> { { "2018-1", new List<GradesBy_> { new GradesBy_ { Identifier = "Math 1", Grades = new List<Grade> { dataGrade[0] } } } } } };
+            var expected = new GradeReport { Name = dataStudent[0].Name, Grades = new Dictionary<string, List<GradesBy_>> { { "2018-1", new List<GradesBy_> { new GradesBy_ { Identifier = "Math 1", Grades = new List<Grade> { dataGrade[0] } } } } } };
             Assert.AreEqual(expected.Name, result.Name);
             Assert.AreEqual(expected.Grades.Count, result.Grades.Count);
         }
@@ -180,13 +182,13 @@ namespace GoodPractices_Test
             var mockSetGrade = GeneralMock.GetQueryableMockDbSet(dataGrade);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
-            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", "12341564" } })).Returns("The student identified by 12341564 doesnt exists");
+            _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent } })).Returns($"The student identified by {_noExistingStudent} doesnt exists");
             _studentController = new StudentController(_mockContext.Object, _validator.Object);
             //When
-            var result = _studentController.GetGradesByPeriod("12341564");
+            var result = _studentController.GetGradesByPeriod(_noExistingStudent);
 
             //then
-            Assert.AreEqual(result.Error, "The student identified by 12341564 doesnt exists");
+            Assert.AreEqual(result.Error, $"The student identified by {_noExistingStudent} doesnt exists");
         }
         #endregion
 
