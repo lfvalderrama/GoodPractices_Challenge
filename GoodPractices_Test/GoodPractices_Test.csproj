@@ -71,6 +71,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdministratorControllerTest.cs" />
     <Compile Include="CourseControllerTest.cs" />
     <Compile Include="GeneralMock.cs" />
     <Compile Include="GradeControllerTest.cs" />

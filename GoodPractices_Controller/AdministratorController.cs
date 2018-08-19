@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace GoodPractices_Controller
 {
-    class AdministratorController
+    public class AdministratorController
     {
         private ISchoolDBContext _context;
         private IValidation _validator;

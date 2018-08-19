@@ -248,6 +248,3 @@ namespace GoodPractices_Controller
         }
     }
 }
-
-
-//TODO print Class

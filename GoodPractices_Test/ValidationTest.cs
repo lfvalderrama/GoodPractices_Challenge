@@ -17,7 +17,7 @@ namespace GoodPractices_Test
 
         private readonly List<Subject> dataSubject = new List<Subject>
         {
-                new ForeignLanguage { Name = "Math 1"}
+                new Subject { Name = "Math 1"}
         };
 
         private readonly List<Student> dataStudent = new List<Student>
