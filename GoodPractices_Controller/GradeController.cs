@@ -22,14 +22,14 @@ namespace GoodPractices_Controller
         {
             var student = _context.Students.Include(s => s.Grades).Where(s => s.Document == studentDocument);
             var subject = _context.Subjects.Where(s => s.Name == subjectName);
-            var grades = student.First().Grades;
             String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", studentDocument }, { "subject", subjectName } });
             if (checks != "success")
             {
                 return checks;
             }
             if (type == GradeType.PARTIAL1 || type == GradeType.PARTIAL2 || type == GradeType.PARTIAL3)
-            {               
+            {
+                var grades = student.First().Grades;
                 foreach (Grade grade in grades)
                 {
                     if (grade.Period == period && grade.Subject == subject.First() && grade.Type == type)

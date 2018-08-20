@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D8D00AF5-AE3B-4F2E-93DA-EA158D227F40}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>GoodPractices_Challenge</RootNamespace>
-    <AssemblyName>GoodPractices_Challenge</AssemblyName>
+    <RootNamespace>GoodPractices_Model</RootNamespace>
+    <AssemblyName>GoodPractices_Model</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
