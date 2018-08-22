@@ -91,7 +91,7 @@ namespace GoodPractices_Engine
                             string headmanDocument = Console.ReadLine();
                             printer.PrintMessage("Teacher Document:");
                             string teacherDocument = Console.ReadLine();
-                            printer.PrintMessage(courseController.CreateCourse(name, headmanDocument, teacherDocument));
+                            //printer.PrintMessage(courseController.CreateCourse(name, headmanDocument, teacherDocument));
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;

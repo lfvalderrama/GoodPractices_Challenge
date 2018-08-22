@@ -19,18 +19,18 @@ namespace GoodPractices_Engine
         }
 
         #region CreateCourse
-        public String CreateCourse(String courseName, String headmanDocument, String teacherDocument)
+        public ResponseMessage CreateCourse(String courseName, String headmanDocument, String teacherDocument)
         {
             var student = _context.Students.Where(s => s.Document == headmanDocument);
             var teacher = _context.Teachers.Include(t => t.Course).Where(t => t.Document == teacherDocument);
             String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "student", headmanDocument }, { "teacher", teacherDocument }, {"noCourse", courseName} });
             if (checks != "success")
             {
-                return checks;
+                return new ResponseMessage {Code = 400, Message = checks };
             }
             if (teacher.First().Course != null)
             {
-                return $"The teacher identified by {teacherDocument} already has assigned the course {teacher.First().Course.Name}";
+                return new ResponseMessage { Code = 400, Message =  $"The teacher identified by {teacherDocument} already has assigned the course {teacher.First().Course.Name}" };
             }
             else
             {
@@ -44,11 +44,11 @@ namespace GoodPractices_Engine
                     _context.Courses.Add(course);
                     teacher.First().Course = course;
                     _context.SaveChanges();
-                    return $"The course {courseName} was created satisfactorily";
+                    return new ResponseMessage { Code = 200, Message = $"The course {courseName} was created satisfactorily" };
                 }
                 else
                 {
-                    return $"The student identified by {headmanDocument} is already headman of the course {_context.Courses.Where(c => c.Headman.Document == headmanDocument).First().Name}";
+                    return new ResponseMessage { Code = 400, Message = $"The student identified by {headmanDocument} is already headman of the course {_context.Courses.Where(c => c.Headman.Document == headmanDocument).First().Name}" };
                 }
             }
         }
@@ -120,6 +120,23 @@ namespace GoodPractices_Engine
                 coursesList.Add($"{course.Name}");
             }
             return coursesList;*/
+        }
+        #endregion
+
+        #region GetCourseById
+        public ResponseCourse GetCourseById(long Id)
+        {
+            var course = _context.Courses.Include(c => c.Students).Include(c => c.Subjects).Where(c => c.Id == Id).First();
+            var responseCourse = new ResponseCourse { Name = course.Name, Id = course.Id, Headman = new ResponseCourse.Info { Name = course.Headman.Name, Id = course.Headman.Id }, Students = new List<ResponseCourse.Info>(), Subjects = new List<ResponseCourse.Info>() };
+            foreach (var s in course.Students)
+            {
+                responseCourse.Students.Add(new ResponseCourse.Info { Name = s.Name, Id = s.Id });
+            }
+            foreach (var s in course.Subjects)
+            {
+                responseCourse.Subjects.Add(new ResponseCourse.Info { Name = s.Name, Id = s.Id });
+            }
+            return responseCourse;
         }
         #endregion
 
