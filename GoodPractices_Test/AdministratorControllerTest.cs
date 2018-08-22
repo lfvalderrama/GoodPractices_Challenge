@@ -1,4 +1,4 @@
-﻿using GoodPractices_Controller;
+﻿using GoodPractices_Engine;
 using GoodPractices_Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -42,7 +42,7 @@ namespace GoodPractices_Test
 
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
-        private AdministratorController _administratorController;
+        private AdministratorEnginer _administratorController;
 
         #region AddStudentTocourse_adds_student
         [TestMethod]
@@ -54,7 +54,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "course", dataCourse[0].Name } })).Returns("success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddStudentToCourse(dataStudent[0].Document, dataCourse[0].Name);
 
@@ -74,7 +74,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent }, { "course", dataCourse[0].Name } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddStudentToCourse(_noExistingStudent, dataCourse[0].Name);
 
@@ -95,7 +95,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "course", dataCourse[0].Name } })).Returns($"success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddStudentToCourse(dataStudent[0].Document, dataCourse[0].Name);
 
@@ -116,7 +116,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "course", dataCourse[0].Name } })).Returns($"success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddStudentToCourse(dataStudent[0].Document, dataCourse[0].Name);
 
@@ -140,7 +140,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "course", dataCourse[0].Name } })).Returns($"success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddStudentToCourse(dataStudent[0].Document, dataCourse[0].Name);
 
@@ -160,7 +160,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", dataSubject[0].Name }, { "course", dataCourse[0].Name } })).Returns("success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddSubjectToCourse(dataSubject[0].Name, dataCourse[0].Name);
 
@@ -180,7 +180,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", _noExistingSubject }, { "course", dataCourse[0].Name } })).Returns($"The subject named {_noExistingSubject} doesn't exists");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddSubjectToCourse(_noExistingSubject, dataCourse[0].Name);
 
@@ -202,7 +202,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _mockContext.Setup(c => c.ForeignLanguages).Returns(mockSetLanguage.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", dataLanguage[0].Name }, { "course", dataCourse[0].Name } })).Returns($"success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddSubjectToCourse(dataLanguage[0].Name, dataCourse[0].Name);
 
@@ -223,7 +223,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", dataSubject[0].Name }, { "course", dataCourse[0].Name } })).Returns($"success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddSubjectToCourse(dataSubject[0].Name, dataCourse[0].Name);
 
@@ -243,7 +243,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "teacher", dataTeacher[0].Document }, { "subject", dataSubject[0].Name } })).Returns("success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddSubjectToTeacher(dataSubject[0].Name, dataTeacher[0].Document);
 
@@ -263,7 +263,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "teacher", dataTeacher[0].Document }, { "subject", _noExistingSubject } })).Returns($"The subject named {_noExistingSubject} doesn't exists");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddSubjectToTeacher(_noExistingSubject, dataTeacher[0].Document);
 
@@ -284,7 +284,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "teacher", dataTeacher[0].Document }, { "subject", dataSubject[0].Name } })).Returns("success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.AddSubjectToTeacher(dataSubject[0].Name, dataTeacher[0].Document);
 
@@ -305,7 +305,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "course", dataCourse[0].Name } })).Returns("success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.ReasignHeadman(dataCourse[0].Name, dataStudent[0].Document);
 
@@ -325,7 +325,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent }, { "course", dataCourse[0].Name } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.ReasignHeadman(dataCourse[0].Name, _noExistingStudent);
 
@@ -346,7 +346,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "course", dataCourse[0].Name } })).Returns($"success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.ReasignHeadman(dataCourse[0].Name, dataStudent[0].Document);
 
@@ -366,7 +366,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "course", dataCourse[0].Name } })).Returns($"success");
-            _administratorController = new AdministratorController(_mockContext.Object, _validator.Object);
+            _administratorController = new AdministratorEnginer(_mockContext.Object, _validator.Object);
             //When
             var result = _administratorController.ReasignHeadman(dataCourse[0].Name, dataStudent[0].Document);
 

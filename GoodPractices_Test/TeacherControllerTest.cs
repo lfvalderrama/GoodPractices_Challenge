@@ -1,4 +1,4 @@
-﻿using GoodPractices_Controller;
+﻿using GoodPractices_Engine;
 using GoodPractices_Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -36,7 +36,7 @@ namespace GoodPractices_Test
 
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
-        private TeacherController _teacherController;
+        private TeacherEngine _teacherController;
 
         #region CreateSTeacher_saves_a_teacher
         [TestMethod]
@@ -46,7 +46,7 @@ namespace GoodPractices_Test
             var mockSetTeacher = GeneralMock.GetQueryableMockDbSet(dataTeacher);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noTeacher", _noExistingTeacher } })).Returns("success");
-            _teacherController = new TeacherController(_mockContext.Object, _validator.Object);
+            _teacherController = new TeacherEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _teacherController.CreateTeacher(_noExistingTeacher, "test", 14);
 
@@ -65,7 +65,7 @@ namespace GoodPractices_Test
             var mockSetTeacher = GeneralMock.GetQueryableMockDbSet(dataTeacher);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noTeacher", dataTeacher[0].Document } })).Returns($"The Teacher identified by {dataTeacher[0].Document} already exists");
-            _teacherController = new TeacherController(_mockContext.Object, _validator.Object);
+            _teacherController = new TeacherEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _teacherController.CreateTeacher(dataTeacher[0].Document, "asdasd", 14);
@@ -85,7 +85,7 @@ namespace GoodPractices_Test
             var mockSetTeacher = GeneralMock.GetQueryableMockDbSet(dataTeacher);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "teacher", dataTeacher[0].Document } })).Returns("success");
-            _teacherController = new TeacherController(_mockContext.Object, _validator.Object);
+            _teacherController = new TeacherEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _teacherController.DeleteTeacher(dataTeacher[0].Document);
@@ -106,7 +106,7 @@ namespace GoodPractices_Test
             var mockSetTeacher = GeneralMock.GetQueryableMockDbSet(dataTeacher);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "teacher", _noExistingTeacher } })).Returns($"The Teacher identified by {_noExistingTeacher} doesn't exists");
-            _teacherController = new TeacherController(_mockContext.Object, _validator.Object);
+            _teacherController = new TeacherEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _teacherController.DeleteTeacher(_noExistingTeacher);
@@ -138,7 +138,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "teacher", dataTeacher[0].Document } })).Returns("success");
-            _teacherController = new TeacherController(_mockContext.Object, _validator.Object);
+            _teacherController = new TeacherEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _teacherController.GetGradesOfStudentsByTeacher(dataTeacher[0].Document);
@@ -193,7 +193,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "teacher", _noExistingTeacher } })).Returns($"The Teacher identified by { _noExistingTeacher} doesn't exists");
-            _teacherController = new TeacherController(_mockContext.Object, _validator.Object);
+            _teacherController = new TeacherEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _teacherController.GetGradesOfStudentsByTeacher(_noExistingTeacher);

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity;
 using System.Linq;
-using GoodPractices_Controller;
+using GoodPractices_Engine;
 using GoodPractices_Model;
 using Moq;
 
@@ -38,7 +38,7 @@ namespace GoodPractices_Test
 
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
-        private GradeController _gradeController;
+        private GradeEngine _gradeController;
 
         #region AddPartialGradeToStudent_adds_grade
         [TestMethod]
@@ -52,7 +52,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "subject", dataSubject[0].Name } })).Returns("success");
-            _gradeController = new GradeController(_mockContext.Object, _validator.Object);
+            _gradeController = new GradeEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _gradeController.AddPartialGradeToStudent(_period, _score, dataSubject[0].Name, _type, dataStudent[0].Document);
@@ -75,7 +75,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent }, { "subject", dataSubject[0].Name } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
-            _gradeController = new GradeController(_mockContext.Object, _validator.Object);
+            _gradeController = new GradeEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _gradeController.AddPartialGradeToStudent(_period, _score, dataSubject[0].Name, _type, _noExistingStudent);
@@ -100,7 +100,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "subject", dataSubject[0].Name } })).Returns($"success");
-            _gradeController = new GradeController(_mockContext.Object, _validator.Object);
+            _gradeController = new GradeEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _gradeController.AddPartialGradeToStudent(_period, _score, dataSubject[0].Name, GradeType.PARTIAL1, dataStudent[0].Document);
@@ -123,7 +123,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "subject", dataSubject[0].Name } })).Returns($"success");
-            _gradeController = new GradeController(_mockContext.Object, _validator.Object);
+            _gradeController = new GradeEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _gradeController.AddPartialGradeToStudent(_period, _score, dataSubject[0].Name, GradeType.FINAL, dataStudent[0].Document);
@@ -154,7 +154,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document } })).Returns("success");
-            _gradeController = new GradeController(_mockContext.Object, _validator.Object);
+            _gradeController = new GradeEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _gradeController.CalculateFinalGradeToStudent(_period ,dataStudent[0].Document);
@@ -177,7 +177,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent }})).Returns($"The student identified by {_noExistingStudent} doesn't exists");
-            _gradeController = new GradeController(_mockContext.Object, _validator.Object);
+            _gradeController = new GradeEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _gradeController.CalculateFinalGradeToStudent(_period, _noExistingStudent);

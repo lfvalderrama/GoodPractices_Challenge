@@ -1,11 +1,8 @@
-﻿using System;
+﻿using GoodPractices_Model;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GoodPractices_Model;
 
-namespace GoodPractices_Controller
+namespace GoodPractices_Engine
 {
     public interface IPrinter
     {
@@ -16,7 +13,7 @@ namespace GoodPractices_Controller
         void PrintSubjectsOfCourses(Dictionary<string, List<string>> courses);
         void PrintMenu();
     }
-
+    
     public class ConsolePrinter : IPrinter
     {
         public void PrintMessage(string message)

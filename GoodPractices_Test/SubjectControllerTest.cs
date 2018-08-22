@@ -1,4 +1,4 @@
-﻿using GoodPractices_Controller;
+﻿using GoodPractices_Engine;
 using GoodPractices_Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -24,7 +24,7 @@ namespace GoodPractices_Test
 
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
-        private SubjectController _subjectController;
+        private SubjectEngine _subjectController;
 
         #region CreateSubject_saves_a_subject
         [TestMethod]
@@ -34,7 +34,7 @@ namespace GoodPractices_Test
             var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noSubject", _noExistingSubject } })).Returns("success");
-            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            _subjectController = new SubjectEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _subjectController.CreateSubject(_noExistingSubject, "test");
 
@@ -53,7 +53,7 @@ namespace GoodPractices_Test
             var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noSubject", dataSubject[0].Name } })).Returns($"The Subject named {dataSubject[0].Name} already exists");
-            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            _subjectController = new SubjectEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _subjectController.CreateSubject(dataSubject[0].Name, "test");
 
@@ -72,7 +72,7 @@ namespace GoodPractices_Test
             var mockSetLanguage = GeneralMock.GetQueryableMockDbSet(dataLanguage);
             _mockContext.Setup(c => c.ForeignLanguages).Returns(mockSetLanguage.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noForeignLanguage", _noExistingLanguage } })).Returns("success");
-            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            _subjectController = new SubjectEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _subjectController.CreateLanguage(Language.FRENCH,_noExistingLanguage, "test");
 
@@ -91,7 +91,7 @@ namespace GoodPractices_Test
             var mockSetLanguage = GeneralMock.GetQueryableMockDbSet(dataLanguage);
             _mockContext.Setup(c => c.ForeignLanguages).Returns(mockSetLanguage.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noForeignLanguage", dataLanguage[0].Name } })).Returns($"The ForeignLanguage named {dataLanguage[0].Name} already exists");
-            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            _subjectController = new SubjectEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _subjectController.CreateLanguage(Language.FRENCH, dataLanguage[0].Name, "test");
 
@@ -110,7 +110,7 @@ namespace GoodPractices_Test
             var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", dataSubject[0].Name } })).Returns("success");
-            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            _subjectController = new SubjectEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _subjectController.DeleteSubject(dataSubject[0].Name);
 
@@ -129,7 +129,7 @@ namespace GoodPractices_Test
             var mockSetSubject = GeneralMock.GetQueryableMockDbSet(dataSubject);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "subject", _noExistingSubject } })).Returns($"The Subject named {_noExistingSubject} doesn't exists");
-            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            _subjectController = new SubjectEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _subjectController.DeleteSubject(_noExistingSubject);
 
@@ -148,7 +148,7 @@ namespace GoodPractices_Test
             var mockSetLanguages = GeneralMock.GetQueryableMockDbSet(dataLanguage);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _mockContext.Setup(c => c.ForeignLanguages).Returns(mockSetLanguages.Object);
-            _subjectController = new SubjectController(_mockContext.Object, _validator.Object);
+            _subjectController = new SubjectEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _subjectController.GetSubjects();

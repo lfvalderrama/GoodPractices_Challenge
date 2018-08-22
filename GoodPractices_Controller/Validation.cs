@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoodPractices_Controller
+namespace GoodPractices_Engine
 {
     public class Validation : IValidation
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity;
 using System.Linq;
-using GoodPractices_Controller;
+using GoodPractices_Engine;
 using GoodPractices_Model;
 using Moq;
 
@@ -39,7 +39,7 @@ namespace GoodPractices_Test
 
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
-        private CourseController _courseController;
+        private CourseEngine _courseController;
 
         #region CreateCourse_creates_a_course
         [TestMethod]
@@ -53,7 +53,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "teacher", dataTeacher[0].Document }, {"noCourse", _noExistingCourse } })).Returns("success");
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.CreateCourse(_noExistingCourse, dataStudent[0].Document, dataTeacher[0].Document);
@@ -77,7 +77,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent }, { "teacher", dataTeacher[0].Document }, { "noCourse", _noExistingCourse } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.CreateCourse(_noExistingCourse, _noExistingStudent, dataTeacher[0].Document);
@@ -101,7 +101,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "teacher", dataTeacher[0].Document }, { "noCourse", _noExistingCourse } })).Returns($"success");
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.CreateCourse(_noExistingCourse, dataStudent[0].Document, dataTeacher[0].Document);
@@ -125,7 +125,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _mockContext.Setup(c => c.Teachers).Returns(mockSetTeacher.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "teacher", dataTeacher[0].Document }, { "noCourse", _noExistingCourse } })).Returns($"success");
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.CreateCourse(_noExistingCourse, dataStudent[0].Document, dataTeacher[0].Document);
@@ -144,7 +144,7 @@ namespace GoodPractices_Test
             var mockSetCourse = GeneralMock.GetQueryableMockDbSet(dataCourse);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "course", dataCourse[0].Name } })).Returns("success");
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.DeleteCourse(dataCourse[0].Name);
@@ -165,7 +165,7 @@ namespace GoodPractices_Test
             var mockSetCourse = GeneralMock.GetQueryableMockDbSet(dataCourse);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "course", _noExistingCourse } })).Returns($"The course named {_noExistingCourse} doesn't exists");
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.DeleteCourse(_noExistingCourse);
@@ -187,7 +187,7 @@ namespace GoodPractices_Test
             var mockSetCourse = GeneralMock.GetQueryableMockDbSet(dataCourse);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.GetHeadmans();
@@ -207,7 +207,7 @@ namespace GoodPractices_Test
             var mockSetCourse = GeneralMock.GetQueryableMockDbSet(dataCourse);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.GetCourses();
@@ -228,7 +228,7 @@ namespace GoodPractices_Test
             var mockSetCourse = GeneralMock.GetQueryableMockDbSet(dataCourse);
             _mockContext.Setup(c => c.Subjects).Returns(mockSetSubject.Object);
             _mockContext.Setup(c => c.Courses).Returns(mockSetCourse.Object);
-            _courseController = new CourseController(_mockContext.Object, _validator.Object);
+            _courseController = new CourseEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _courseController.GetSUbjectsByCourse();

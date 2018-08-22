@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using GoodPractices_Controller;
+using GoodPractices_Engine;
 using GoodPractices_Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

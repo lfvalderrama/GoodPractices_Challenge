@@ -1,4 +1,4 @@
-﻿using GoodPractices_Controller;
+﻿using GoodPractices_Engine;
 using GoodPractices_Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -27,7 +27,7 @@ namespace GoodPractices_Test
 
         private Mock<ISchoolDBContext> _mockContext = new Mock<ISchoolDBContext>();
         private Mock<IValidation> _validator = new Mock<IValidation>();
-        private StudentController _studentController;
+        private StudentEngine _studentController;
 
         #region CreateStudent_saves_a_student
         [TestMethod]
@@ -37,7 +37,7 @@ namespace GoodPractices_Test
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);            
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>(){ { "noStudent", _noExistingStudent } })).Returns("success");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _studentController.CreateStudent(_noExistingStudent, "test", 14);
 
@@ -56,7 +56,7 @@ namespace GoodPractices_Test
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "noStudent", dataStudent[0].Document } })).Returns($"The student identified by {dataStudent[0].Document} already exists");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _studentController.CreateStudent(dataStudent[0].Document, "asdasd", 14);
@@ -76,7 +76,7 @@ namespace GoodPractices_Test
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document } })).Returns("success");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _studentController.DeleteStudent(dataStudent[0].Document);
@@ -97,7 +97,7 @@ namespace GoodPractices_Test
             var mockSetStudent = GeneralMock.GetQueryableMockDbSet(dataStudent);
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
 
             //When
             var result = _studentController.DeleteStudent(_noExistingStudent);
@@ -119,7 +119,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(f => f.ForeignLanguages).Returns(mockSetLanguage.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document }, { "foreignLanguage", dataLanguage[0].Name } })).Returns("success");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _studentController.AssignForeignLanguage(dataStudent[0].Document, "French 1");
 
@@ -139,7 +139,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(f => f.ForeignLanguages).Returns(mockSetLanguage.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent }, { "foreignLanguage", "French 1" } })).Returns($"The student identified by {_noExistingStudent} doesn't exists");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _studentController.AssignForeignLanguage(_noExistingStudent, "French 1");
 
@@ -160,7 +160,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", dataStudent[0].Document } })).Returns("success");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _studentController.GetGradesByPeriod(dataStudent[0].Document);
 
@@ -191,7 +191,7 @@ namespace GoodPractices_Test
             _mockContext.Setup(c => c.Students).Returns(mockSetStudent.Object);
             _mockContext.Setup(c => c.Grades).Returns(mockSetGrade.Object);
             _validator.Setup(v => v.CheckExistence(new Dictionary<string, string>() { { "student", _noExistingStudent } })).Returns($"The student identified by {_noExistingStudent} doesnt exists");
-            _studentController = new StudentController(_mockContext.Object, _validator.Object);
+            _studentController = new StudentEngine(_mockContext.Object, _validator.Object);
             //When
             var result = _studentController.GetGradesByPeriod(_noExistingStudent);
 

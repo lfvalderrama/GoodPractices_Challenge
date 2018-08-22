@@ -86,13 +86,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GoodPractices_Controller\GoodPractices_Controller.csproj">
+    <ProjectReference Include="..\GoodPractices_Controller\GoodPractices_Engine.csproj">
       <Project>{14726eca-635e-41ef-bc9c-1ff6e9e495f1}</Project>
-      <Name>GoodPractices_Controller</Name>
+      <Name>GoodPractices_Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GoodPractices_Model\GoodPractices_Model.csproj">
+    <ProjectReference Include="..\GoodPractices_Model\GoodPractices_DBModel.csproj">
       <Project>{d8d00af5-ae3b-4f2e-93da-ea158d227f40}</Project>
-      <Name>GoodPractices_Model</Name>
+      <Name>GoodPractices_DBModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

@@ -2,7 +2,7 @@
 using System;
 using Autofac;
 
-namespace GoodPractices_Controller
+namespace GoodPractices_Engine
 {
     public class Program
     {
@@ -15,12 +15,12 @@ namespace GoodPractices_Controller
             using (var scope = Container.BeginLifetimeScope())
             {
                 var printer = scope.Resolve<IPrinter>();
-                var courseController = scope.Resolve<CourseController>();
-                var administratorController = scope.Resolve<AdministratorController>();
-                var gradeController = scope.Resolve<GradeController>();
-                var studentController = scope.Resolve<StudentController>();
-                var subjectController = scope.Resolve<SubjectController>();
-                var teacherController = scope.Resolve<TeacherController>();
+                var courseController = scope.Resolve<CourseEngine>();
+                var administratorController = scope.Resolve<AdministratorEnginer>();
+                var gradeController = scope.Resolve<GradeEngine>();
+                var studentController = scope.Resolve<StudentEngine>();
+                var subjectController = scope.Resolve<SubjectEngine>();
+                var teacherController = scope.Resolve<TeacherEngine>();
 
                 string option = "100";
 
@@ -137,7 +137,8 @@ namespace GoodPractices_Controller
                             break;
                         case "9":
                             printer.PrintMessage("9. List all courses.\n\nCOURSES:");
-                            printer.PrintList(courseController.GetCourses());
+                            Console.WriteLine(courseController.GetCourses());
+                            //printer.PrintList(courseController.GetCourses());
                             printer.PrintMessage("Press a key to continue....");
                             Console.ReadKey();
                             break;
@@ -238,12 +239,12 @@ namespace GoodPractices_Controller
             builder.RegisterType<Validation>().As<IValidation>();
             builder.RegisterType<ConsolePrinter>().As<IPrinter>();
             builder.RegisterType<SchoolDBContext>().As<ISchoolDBContext>();
-            builder.RegisterType<CourseController>();
-            builder.RegisterType<AdministratorController>();
-            builder.RegisterType<GradeController>();
-            builder.RegisterType<StudentController>();
-            builder.RegisterType<SubjectController>();
-            builder.RegisterType<TeacherController>();
+            builder.RegisterType<CourseEngine>();
+            builder.RegisterType<AdministratorEnginer>();
+            builder.RegisterType<GradeEngine>();
+            builder.RegisterType<StudentEngine>();
+            builder.RegisterType<SubjectEngine>();
+            builder.RegisterType<TeacherEngine>();
             Container = builder.Build();
         }
     }

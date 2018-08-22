@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GoodPractices_Controller
+namespace GoodPractices_Engine
 {
     public interface IValidation
     {
