@@ -37,6 +37,32 @@ namespace GoodPractices_Engine
         }
         #endregion
 
+        #region UpdateTeacher
+        public Tuple<int, ResponseMessage> UpdateTeacher(long id, Teacher teacherInput)
+        {
+            try
+            {
+                var teacher = _context.Teachers.Find(id);
+                if (teacher == null)
+                {
+                    return new Tuple<int, ResponseMessage>(404, new ResponseMessage { Message = "Teacher not found" });
+                }
+                else
+                {
+                    if (teacherInput.Name != null) teacher.Name = teacherInput.Name;
+                    if (teacherInput.Document != null) teacher.Document = teacherInput.Document;
+                    if (teacherInput.Age != 0) teacher.Age = teacherInput.Age;
+                    _context.SaveChanges();
+                    return new Tuple<int, ResponseMessage>(200, new ResponseMessage { Message = $"The teacher {teacher.Name} was updated satisfactorily" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Tuple<int, ResponseMessage>(500, new ResponseMessage { Message = ex.Message });
+            }
+        }
+        #endregion
+
         #region DeleteTeacher
         public Tuple<int, ResponseMessage> DeleteTeacher(String teacherDocument)
         {
@@ -58,6 +84,10 @@ namespace GoodPractices_Engine
                 catch (System.Data.Entity.Infrastructure.DbUpdateException)
                 {
                     return new Tuple<int, ResponseMessage>(400, new ResponseMessage { Message = ($"The Teacher can't be deleted, there are subjects that have it as a teacher.") });
+                }
+                catch (Exception ex)
+                {
+                    return new Tuple<int, ResponseMessage>(500, new ResponseMessage { Message = ex.Message });
                 }
 
             }

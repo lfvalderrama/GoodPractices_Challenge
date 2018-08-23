@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using GoodPractices_ResponseModel;
 using System.Web.Services.Description;
+using RestApi.Helpers;
 
 namespace RestApi.Controllers
 {
@@ -18,49 +19,40 @@ namespace RestApi.Controllers
         public string HeadmanDocument { get; set; }
         public string TeacherDocument { get; set; }
     }
+
     public class CoursesController : ApiController
     {
-        private readonly HttpConfiguration _config = GlobalConfiguration.Configuration;
+        ICodeHandler _codeHandler;
         CourseEngine _courseEngine;
 
-        // GET api/courses
-        public List<ResponseCourse> Get()
+        public CoursesController(ICodeHandler codeHandler, CourseEngine courseEngine)
         {
-            var scope = _config.DependencyResolver.BeginScope();
-            _courseEngine = scope.GetService(typeof(CourseEngine)) as CourseEngine;
-            return _courseEngine.GetCourses();
+            _courseEngine = courseEngine;
+            _codeHandler = codeHandler;
+        }
+
+        // GET api/courses
+        public HttpResponseMessage Get()
+        {            
+            var result = _courseEngine.GetCourses();
+            var code = _codeHandler.GetStatusCode(result.Item1);
+            return  (code != HttpStatusCode.InternalServerError) ?  Request.CreateResponse(code, result.Item2) : Request.CreateResponse(code, result.Item3);
         }
 
         // GET api/courses/5
         public HttpResponseMessage Get(long id)
         {
-            var scope = _config.DependencyResolver.BeginScope();
-            _courseEngine = scope.GetService(typeof(CourseEngine)) as CourseEngine;
-            var code = HttpStatusCode.OK;
             var result = _courseEngine.GetCourseById(id);
-            if(result.Item1 == 404) code = HttpStatusCode.NotFound;
-            return Request.CreateResponse(code, result.Item2);
+            var code = _codeHandler.GetStatusCode(result.Item1);
+            return (code != HttpStatusCode.InternalServerError) ? Request.CreateResponse(code, result.Item2) : Request.CreateResponse(code, result.Item3);
         }
 
         // POST api/courses
         public HttpResponseMessage Post([FromBody]CourseInput value)
         {
-            var scope = _config.DependencyResolver.BeginScope();
-            _courseEngine = scope.GetService(typeof(CourseEngine)) as CourseEngine;
             var result = _courseEngine.CreateCourse(value.Name, value.HeadmanDocument, value.TeacherDocument);
-            var code = HttpStatusCode.Created;
-            if (result.Item1 != 201) code = HttpStatusCode.BadRequest;
+            var code = _codeHandler.GetStatusCode(result.Item1);
             return Request.CreateResponse(code, result.Item2);
-        }
-
-            // PUT api/courses/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/courses/5
-        public void Delete(int id)
-        {
         }
     }
 }

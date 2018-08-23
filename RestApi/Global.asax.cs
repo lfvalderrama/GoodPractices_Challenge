@@ -4,6 +4,7 @@ using GoodPractices_Model;
 using GoodPractices_Engine;
 using System.Reflection;
 using System.Web.Http;
+using RestApi.Helpers;
 
 namespace RestApi
 {
@@ -28,10 +29,12 @@ namespace RestApi
             // Register your Web API controllers.
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            builder.RegisterType<Validation>().As<IValidation>();
-            builder.RegisterType<SchoolDBContext>().As<ISchoolDBContext>();
-            builder.RegisterType<CourseEngine>();
-            builder.RegisterType<TeacherEngine>();
+            builder.RegisterType<Validation>().As<IValidation>().InstancePerRequest();
+            builder.RegisterType<SchoolDBContext>().As<ISchoolDBContext>().InstancePerRequest();
+            builder.RegisterType<CodeHandler>().As<ICodeHandler>().InstancePerRequest();
+            builder.RegisterType<CourseEngine>().InstancePerRequest();
+            builder.RegisterType<TeacherEngine>().InstancePerRequest();
+            builder.RegisterType<SubjectEngine>().InstancePerRequest();
 
             // Set the dependency resolver to be Autofac.
             var container = builder.Build();

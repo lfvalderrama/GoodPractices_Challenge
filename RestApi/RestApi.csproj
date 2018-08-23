@@ -128,10 +128,12 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\SubjectsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CodeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -148,8 +150,8 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GoodPractices_Controller\GoodPractices_Engine.csproj">
-      <Project>{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}</Project>
+    <ProjectReference Include="..\GoodPractices_Engine\GoodPractices_Engine.csproj">
+      <Project>{14726eca-635e-41ef-bc9c-1ff6e9e495f1}</Project>
       <Name>GoodPractices_Engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\GoodPractices_Model\GoodPractices_DBModel.csproj">

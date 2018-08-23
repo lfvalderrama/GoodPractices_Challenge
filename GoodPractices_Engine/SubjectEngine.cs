@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GoodPractices_Model;
+using GoodPractices_ResponseModel;
 
 namespace GoodPractices_Engine
 {
@@ -32,6 +33,24 @@ namespace GoodPractices_Engine
                 _context.Subjects.Add(subject);
                 _context.SaveChanges();
                 return $"The subject {name} was created satisfactorily";
+            }
+        }
+        #endregion
+
+        #region UpdateSubject
+        public Tuple<int,ResponseMessage> UpdateSubject(long id, Subject subjectInput)
+        {
+            var subject = _context.Subjects.Find(id);
+            if (subject == null)
+            {
+                return new Tuple<int, ResponseMessage> (404, new ResponseMessage { Message = "Subject not found" });
+            }
+            else
+            {
+                if (subjectInput.Name != null) subject.Name = subjectInput.Name;
+                if (subjectInput.Content != null) subject.Content = subjectInput.Content;
+                _context.SaveChanges();
+                return new Tuple<int, ResponseMessage>(200, new ResponseMessage { Message = $"The subject {subjectInput.Name} was updated satisfactorily" });
             }
         }
         #endregion

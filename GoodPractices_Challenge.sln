@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodPractices_Engine", "GoodPractices_Controller\GoodPractices_Engine.csproj", "{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodPractices_DBModel", "GoodPractices_Model\GoodPractices_DBModel.csproj", "{D8D00AF5-AE3B-4F2E-93DA-EA158D227F40}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodPractices_Test", "GoodPractices_Test\GoodPractices_Test.csproj", "{38038F52-BF63-4D18-BC3C-C0947A13D599}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestApi", "RestApi\RestApi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodPractices_ResponseModel", "GoodPractices_ResponseModel\GoodPractices_ResponseModel.csproj", "{4BE1056C-CDF4-4C5C-84BB-023ADC8C3946}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodPractices_Engine", "GoodPractices_Engine\GoodPractices_Engine.csproj", "{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8D00AF5-AE3B-4F2E-93DA-EA158D227F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D8D00AF5-AE3B-4F2E-93DA-EA158D227F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8D00AF5-AE3B-4F2E-93DA-EA158D227F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{4BE1056C-CDF4-4C5C-84BB-023ADC8C3946}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BE1056C-CDF4-4C5C-84BB-023ADC8C3946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BE1056C-CDF4-4C5C-84BB-023ADC8C3946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14726ECA-635E-41EF-BC9C-1FF6E9E495F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

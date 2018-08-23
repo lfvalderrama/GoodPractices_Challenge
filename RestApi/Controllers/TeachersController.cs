@@ -1,4 +1,6 @@
 ﻿using GoodPractices_Engine;
+using GoodPractices_Model;
+using RestApi.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +12,28 @@ namespace RestApi.Controllers
 {
     public class TeachersController : ApiController
     {
-        private readonly HttpConfiguration _config = GlobalConfiguration.Configuration;
-        TeacherEngine _teacherEngine;
+        private TeacherEngine _teacherEngine;
+        private ICodeHandler _codeHandler;
+
+        public TeachersController(ICodeHandler codeHandler, TeacherEngine teacherEngine)
+        {
+            _teacherEngine = teacherEngine;
+            _codeHandler = codeHandler;
+        }
 
         // DELETE api/teachers/5
-        public HttpResponseMessage Delete(int id)
+        public HttpResponseMessage Delete(string id)
         {
-            var scope = _config.DependencyResolver.BeginScope();
-            _teacherEngine = scope.GetService(typeof(TeacherEngine)) as TeacherEngine;
-            var result = _teacherEngine.DeleteTeacher(id.ToString());
-            var code = HttpStatusCode.OK;
-            if (result.Item1 == 400) code = HttpStatusCode.BadRequest;
-            if (result.Item1 == 404) code = HttpStatusCode.NotFound;
+            var result = _teacherEngine.DeleteTeacher(id);
+            var code = _codeHandler.GetStatusCode(result.Item1);
+            return Request.CreateResponse(code, result.Item2);
+        }
+
+        // PUT api/teachers/5
+        public HttpResponseMessage Put(int id, [FromBody]Teacher value)
+        {
+            var result = _teacherEngine.UpdateTeacher(id, value);
+            var code = _codeHandler.GetStatusCode(result.Item1);
             return Request.CreateResponse(code, result.Item2);
         }
     }
