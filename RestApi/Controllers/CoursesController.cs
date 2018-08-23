@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using GoodPractices_ResponseModel;
+using System.Web.Services.Description;
 
 namespace RestApi.Controllers
 {
@@ -31,34 +32,33 @@ namespace RestApi.Controllers
         }
 
         // GET api/courses/5
-        public ResponseCourse Get(long id)
+        public HttpResponseMessage Get(long id)
         {
             var scope = _config.DependencyResolver.BeginScope();
             _courseEngine = scope.GetService(typeof(CourseEngine)) as CourseEngine;
-            return _courseEngine.GetCourseById(id);
+            var code = HttpStatusCode.OK;
+            var result = _courseEngine.GetCourseById(id);
+            if(result.Item1 == 404) code = HttpStatusCode.NotFound;
+            return Request.CreateResponse(code, result.Item2);
         }
 
         // POST api/courses
-        public ResponseMessage Post([FromBody]CourseInput value)
+        public HttpResponseMessage Post([FromBody]CourseInput value)
         {
             var scope = _config.DependencyResolver.BeginScope();
             _courseEngine = scope.GetService(typeof(CourseEngine)) as CourseEngine;
             var result = _courseEngine.CreateCourse(value.Name, value.HeadmanDocument, value.TeacherDocument);
-            if (result.Code != 200)
-            {
-                return BadRequestResult(result);
-            }
-            else
-            {
-                return Ok(result);
-            }
+            var code = HttpStatusCode.Created;
+            if (result.Item1 != 201) code = HttpStatusCode.BadRequest;
+            return Request.CreateResponse(code, result.Item2);
+        }
 
-        // PUT api/values/5
+            // PUT api/courses/5
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/courses/5
         public void Delete(int id)
         {
         }

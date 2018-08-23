@@ -31,6 +31,7 @@ namespace RestApi
             builder.RegisterType<Validation>().As<IValidation>();
             builder.RegisterType<SchoolDBContext>().As<ISchoolDBContext>();
             builder.RegisterType<CourseEngine>();
+            builder.RegisterType<TeacherEngine>();
 
             // Set the dependency resolver to be Autofac.
             var container = builder.Build();

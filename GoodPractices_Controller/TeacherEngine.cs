@@ -1,4 +1,5 @@
 ﻿using GoodPractices_Model;
+using GoodPractices_ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -37,13 +38,13 @@ namespace GoodPractices_Engine
         #endregion
 
         #region DeleteTeacher
-        public String DeleteTeacher(String teacherDocument)
+        public Tuple<int, ResponseMessage> DeleteTeacher(String teacherDocument)
         {
             var teacher = _context.Teachers.Where(c => c.Document == teacherDocument);
             String checks = _validator.CheckExistence(new Dictionary<string, string>() { { "teacher", teacherDocument } });
             if (checks != "success")
             {
-                return checks;
+                return new Tuple<int, ResponseMessage> (404,new ResponseMessage { Message = checks });
             }
             else
             {
@@ -51,12 +52,12 @@ namespace GoodPractices_Engine
                 {
                     _context.Teachers.Remove(teacher.First());
                     _context.SaveChanges();
-                    return $"The Teacher identified with {teacherDocument} was deleted satisfactorily";
+                    return new Tuple<int, ResponseMessage>(200, new ResponseMessage { Message = $"The Teacher identified with {teacherDocument} was deleted satisfactorily" });
 
                 }
                 catch (System.Data.Entity.Infrastructure.DbUpdateException)
                 {
-                    return ($"The Teacher can't be deleted, there are subjects that have it as a teacher.");
+                    return new Tuple<int, ResponseMessage>(400, new ResponseMessage { Message = ($"The Teacher can't be deleted, there are subjects that have it as a teacher.") });
                 }
 
             }
